@@ -1,6 +1,12 @@
+_ = require 'underscore'
+
+config = require './config.coffee'
+
 module.exports = ($http, $upload) ->
 
-  $http.defaults.headers.common['Authorization'] = 'Client-ID 4dd0360487c151f'
+  clientId = 'Client-ID ' + config.imgur.clientId
+
+  $http.defaults.headers.common['Authorization'] = clientId
 
   imageEndpoint = 'https://api.imgur.com/3/image'
 
@@ -9,9 +15,10 @@ module.exports = ($http, $upload) ->
       url: imageEndpoint
       file: file
       headers:
-        'Authorization':'Client-ID 4dd0360487c151f'
+        'Authorization': clientId
       data:
         type: 'file'
+
       fileFormDataName: 'image'
 
   postUrl: (url) ->

@@ -1,6 +1,7 @@
 _           = require 'underscore'
 path        = require 'path'
 async       = require 'async'
+config      = require './config.coffee'
 
 angular     = require 'angular'
 ngRoute     = require 'angular-route'
@@ -26,15 +27,15 @@ module = angular.module 'app', [
 ]
 
 module.service 'fileService', ($firebase) ->
-  files: new Firebase 'https://ttcc.firebaseio.com/files'
+  files: new Firebase config.firebase.address + 'files'
 
 module.service 'FirebaseService', ->
-  new Firebase 'https://ttcc.firebaseio.com/'
+  new Firebase config.firebase.address
 
 module.service 'userService', (FirebaseService, $firebase, $firebaseSimpleLogin, $q) ->
   deferred = $q.defer()
 
-  usersRef = new Firebase 'https://ttcc.firebaseio.com/users'
+  usersRef = new Firebase config.firebase.address + 'users'
 
   auth = $firebaseSimpleLogin FirebaseService
 

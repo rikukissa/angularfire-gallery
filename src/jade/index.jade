@@ -1,9 +1,33 @@
 doctype html
 html
   head
-    title Gulp template
-    link(rel='stylesheet', href='css/style.css')
-    script(src='js/bundle.js')
+    title Time to CC
+    link(rel='stylesheet', href='/css/style.css')
+    script(src='/js/bundle.js')
+
   body(ng-app='app')
-    h1 Hello world!
-    span {{ 1 + 2 }}
+    #header(ng-controller='headerCtrl')
+      nav.navbar.navbar-inverse
+        .navbar-header
+          a.navbar-brand(href='/') Time to CC
+
+        .collapse.navbar-collapse
+          ul.nav.navbar-nav.navbar-left
+            li(ng-show='auth.user')
+              a(href='#', ng-click='upload()') Upload
+
+          ul.nav.navbar-nav.navbar-right
+            li(ng-hide='auth.user')
+              a(href='#', ng-click='login()') Log in
+
+            li(ng-hide='auth.user')
+              a(href='#', ng-click='signup()') Sign up
+
+            li.nav-profile(ng-show='auth.user')
+              a(href='#', ng-click='logout()')
+                | Log out
+                img.nav-avatar(gravatar-src='user.email', gravatar-size='36')
+
+
+
+    .container(ng-view)

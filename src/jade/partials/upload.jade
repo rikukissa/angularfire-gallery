@@ -1,0 +1,17 @@
+.modal-header
+  button.close(type='button', aria-hidden='true', ng-click='close()') ×
+  h4.modal-title Upload
+
+form(role='form', ng-submit='submit()')
+  .alert.alert-danger(ng-show='error') {{ error }}
+
+  .modal-body
+    .form-group
+      label(for='file') Select file
+      input#file.form-control(file-input='file', type='file', on-change='parseFile()')
+      //- input#file.form-control(ng-file-select="onFileSelect($files)", type='file')
+
+  .modal-footer
+    button.btn.btn-primary(type='submit')
+      span(ng-hide='submitting') Submit
+      span(ng-show='submitting') Submitting...

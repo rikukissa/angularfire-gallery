@@ -13,7 +13,9 @@
   ],
   "author": "",
   "dependencies": {
-    "coffee-script": "~1.6.3"
+    "coffee-script": "~1.6.3",
+    "gulp-rename": "~0.2.2",
+    "underscore": "~1.5.2"
   },
   "devDependencies": {
     "gulp-rename": "~0.2.1",
@@ -28,6 +30,7 @@
     "coffeeify": "~0.5.2",
     "tiny-lr": "0.0.5",
     "gulp-livereload": "~0.2.0",
-    "bower": "~1.2.8"
+    "bower": "~1.2.8",
+    "express": "~3.4.8"
   }
 }

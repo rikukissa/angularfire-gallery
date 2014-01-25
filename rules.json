@@ -4,7 +4,11 @@
         ".write": false,
         "users": {
           ".read": true,
-          ".write": "auth != null"
+          ".write": "!data.exists()",
+          "$userId": {
+            ".write": "auth != null && auth.id == $userId",
+            ".validate": "auth.id == $userId"
+          }
         },
         "files": {
           ".write": "auth != null && !data.exists()",

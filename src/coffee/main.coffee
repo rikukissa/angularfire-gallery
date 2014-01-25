@@ -1,5 +1,6 @@
 _           = require 'underscore'
 path        = require 'path'
+async       = require 'async'
 angular     = require 'angular'
 ngRoute     = require 'angular-route'
 bootstrap   = require 'angular-ui'
@@ -48,6 +49,30 @@ module.service 'userService', (FirebaseService, $firebase, $firebaseSimpleLogin,
 
 module.service 'imgurService', require './imgurService.coffee'
 
+module.directive 'ngFilePaste', ($parse, $timeout) ->
+  restrict: 'A'
+  link: ($scope, element, attrs) ->
+    fn = $parse attrs.ngFilePaste
+    document.onpaste = (event) ->
+      items = (event.clipboardData || event.originalEvent.clipboardData).items
+
+      # Map all items to data url's
+      async.map items, (item, callback) ->
+        blob = item.getAsFile()
+        fileReader = new FileReader()
+        fileReader.onload = (evt) ->
+          callback null, evt.target.result
+        fileReader.readAsDataURL(blob)
+
+      , (err, results) ->
+        $timeout ->
+          fn $scope,
+            $files: results,
+            $event: event
+
+    $scope.$on '$destroy', ->
+      document.onpaste = null
+
 
 module.filter 'thumbnail', () -> (val) ->
   basename = path.basename val, path.extname(val)
@@ -94,6 +119,7 @@ module.config ($routeProvider, $locationProvider) ->
       templateUrl: '/partials/file/index.html'
       controller: ($scope, $routeParams, userService, fileService, $firebase, $location) ->
         $scope.auth = userService.auth
+        console.log $scope.auth
 
         $scope.delete = ->
           @file.$remove().then () ->

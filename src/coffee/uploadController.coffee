@@ -6,12 +6,19 @@ module.exports = ($scope, $modalInstance, $location, userService, imgurService, 
 
   $scope.file = null
   $scope.url = null
+  $scope.base64 = null
   $scope.filePreview = null
   $scope.submitting = false
   $scope.error = null
 
   $scope.close = ->
     $modalInstance.close()
+
+  $scope.onFilePaste = ($files) ->
+    return unless $files? and $files.length > 0
+    dataUrl = _.first($files)
+    @base64 = dataUrl.substr(dataUrl.indexOf('iVBOR'))
+    @filePreview = dataUrl
 
   $scope.onFileSelect = ($files) ->
     return unless $files? and $files.length > 0
@@ -43,7 +50,7 @@ module.exports = ($scope, $modalInstance, $location, userService, imgurService, 
     @error = err
 
   $scope.submit = ->
-    unless @file? or @url?
+    unless @file? or @url? or @base64?
       return @error = 'NOTHING_SELECTED'
 
     @submitting = true
@@ -58,8 +65,17 @@ module.exports = ($scope, $modalInstance, $location, userService, imgurService, 
           @showError data.data.error
 
     # Send URL to Imgur
-    imgurService.postUrl(@url)
+    if @url?
+      return imgurService.postUrl(@url)
       .then (res) =>
         save res.data.data
       , ({data}) =>
         @showError data.data.error
+
+    # Send base64 to imgur
+    return imgurService.postBase64(@base64)
+    .then (res) =>
+      save res.data.data
+    , ({data}) =>
+      @showError data.data.error
+

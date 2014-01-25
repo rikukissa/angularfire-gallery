@@ -1,4 +1,4 @@
-div(ng-file-drop='onFileSelect($files)')
+div(ng-file-drop='onFileSelect($files)', ng-file-paste='onFilePaste($files)')
   .modal-header
     button.close(type='button', aria-hidden='true', ng-click='close()') ×
     h4.modal-title Upload

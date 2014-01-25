@@ -18,3 +18,8 @@ module.exports = ($http, $upload) ->
     $http.post imageEndpoint,
       image: url
       type: 'URL'
+
+  postBase64: (base64) ->
+    $http.post imageEndpoint,
+      image: base64
+      type: 'base64'

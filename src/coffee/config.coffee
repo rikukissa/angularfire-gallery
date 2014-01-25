@@ -1,6 +1,6 @@
 module.exports =
   imgur:
-    album: null
+    album: 'FWAGIVgIEjvKaTf'
     clientId: '4dd0360487c151f'
 
   firebase:

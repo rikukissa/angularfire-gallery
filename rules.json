@@ -1,0 +1,18 @@
+{
+    "rules": {
+        ".read": false,
+        ".write": false,
+        "users": {
+          ".read": true,
+          ".write": "auth != null"
+        },
+        "files": {
+          ".write": "auth != null && !data.exists()",
+          ".read": true,
+          "$fileId": {
+            ".write": "auth != null && auth.id == data.child('user_id').val()",
+            ".validate": "newData.hasChildren(['user_id']) && auth.id == newData.child('user_id').val()"
+          }
+        }
+    }
+}

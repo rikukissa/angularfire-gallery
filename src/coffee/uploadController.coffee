@@ -13,6 +13,9 @@ module.exports = ($scope, $modalInstance, $location, userService, imgurService, 
   $scope.close = ->
     $modalInstance.close()
 
+  $scope.onFileSelect = ($files) ->
+    return unless $files? and $files.length > 0
+    @file = _.first $files
 
   save = (file) ->
     $scope.submitting = false

@@ -12,7 +12,7 @@ form(role='form', ng-submit='submit()')
   .modal-body
     .form-group
       label(for='file') Select file
-      input#file.form-control(file-input='file', type='file', on-change='parseFile()')
+      input#file.form-control(type='file', ng-file-select='onFileSelect($files)')
     .form-group
       label(for='url') Insert URL
       input#url.form-control(type='text', ng-model='url')

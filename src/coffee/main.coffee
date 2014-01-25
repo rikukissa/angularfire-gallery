@@ -106,18 +106,3 @@ module.config ($routeProvider, $locationProvider) ->
             return $location.path '/404'
           user = userService.users.$child $scope.file.user_id
           user.$bind($scope, 'user')
-
-
-module.directive 'fileInput', ($parse) ->
-  restrict: 'A'
-  link: ($scope, element, attrs) ->
-    modelGet = $parse attrs.fileInput
-    modelSet = modelGet.assign
-    onChange = $parse attrs.onChange
-
-    updateModel = ->
-      $scope.$apply ->
-        modelSet $scope, element[0].files[0]
-        onChange($scope)
-
-    element.on 'change', updateModel

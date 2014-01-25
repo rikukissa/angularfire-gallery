@@ -22,12 +22,17 @@ compileCoffee = (debug = false) ->
       angular:
         path: './vendor/angular/angular.js'
         exports: 'angular'
-      'angular-ui':
-        path: './vendor/angular-bootstrap/ui-bootstrap.js'
+
+      'angular-strap':
+        path: './vendor/angular-strap/dist/angular-strap.js'
         exports: 'angular'
-      'angular-ui-templates':
-        path: './vendor/angular-bootstrap/ui-bootstrap-tpls.js'
+        depends:
+          angular: 'angular'
+
+      'angular-strap-templates':
+        path: './vendor/angular-strap/dist/angular-strap.tpl.js'
         exports: 'angular'
+
       'angular-md5':
         path: './vendor/angular-gravatar/build/md5.js'
         exports: 'angular'

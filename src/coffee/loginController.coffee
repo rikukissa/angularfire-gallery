@@ -1,15 +1,16 @@
-module.exports = ($scope, $modalInstance, userService) ->
+module.exports = ($scope, userService) ->
   $scope.auth = userService.auth
 
   $scope.loggingIn = false
   $scope.loginVisible = true
   $scope.loginError = false
 
-  $scope.email = ''
-  $scope.password = ''
+  $scope.email = null
+  $scope.password = null
 
   $scope.close = ->
-    $modalInstance.close()
+    @email = @password = null
+    @$hide()
 
   $scope.login = ->
     @loginError = null

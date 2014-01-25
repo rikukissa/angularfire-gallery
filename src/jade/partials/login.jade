@@ -1,20 +1,23 @@
-.modal-header
-  button.close(type='button', aria-hidden='true', ng-click='close()') ×
-  h4.modal-title Login
+.modal
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type='button', aria-hidden='true', ng-click='close()') ×
+        h4.modal-title Login
 
-form(role='form', ng-submit='login()')
-  .alert.alert-danger(ng-show='loginError && loginError == "INVALID_USER"') Invalid user
-  .alert.alert-danger(ng-show='loginError && loginError == "INVALID_PASSWORD"') Invalid password
+      form(role='form', ng-submit='login()')
+        .alert.alert-danger(ng-show='loginError && loginError == "INVALID_USER"') Invalid user
+        .alert.alert-danger(ng-show='loginError && loginError == "INVALID_PASSWORD"') Invalid password
 
-  .modal-body
-    .form-group
-      label(for='email') Email address
-      input#email.form-control(type='email', placeholder='Enter email', ng-model='email')
-    .form-group
-      label(for='password') Password
-      input#password.form-control(type='password', placeholder='Password', ng-model='password')
+        .modal-body
+          .form-group
+            label(for='email') Email address
+            input#email.form-control(type='email', placeholder='Enter email', ng-model='email')
+          .form-group
+            label(for='password') Password
+            input#password.form-control(type='password', placeholder='Password', ng-model='password')
 
-  .modal-footer
-    button.btn.btn-primary(type='submit')
-      span(ng-hide='loggingIn') Log in
-      span(ng-show='loggingIn') Logging in...
+        .modal-footer
+          button.btn.btn-primary(type='submit')
+            span(ng-hide='loggingIn') Log in
+            span(ng-show='loggingIn') Logging in...

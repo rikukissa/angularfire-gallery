@@ -1,16 +1,23 @@
 _ = require 'underscore'
-module.exports = ($scope, $modalInstance, $location, userService, imgurService, fileService, $firebase) ->
+module.exports = ($scope, $location, userService, imgurService, fileService, $firebase) ->
   $scope.auth = userService.auth
 
-  $scope.file = null
-  $scope.url = null
-  $scope.base64 = null
-  $scope.filePreview = null
-  $scope.submitting = false
-  $scope.error = null
+  $scope.$on '$destroy', ->
+    console.log 'destruction'
+
+  $scope.reset = ->
+    @file = null
+    @url = null
+    @base64 = null
+    @filePreview = null
+    @submitting = false
+    @error = null
 
   $scope.close = ->
-    $modalInstance.close()
+    @reset()
+    @$hide()
+
+  $scope.reset()
 
   $scope.onFilePaste = ($files) ->
     return unless $files? and $files.length > 0
@@ -30,16 +37,15 @@ module.exports = ($scope, $modalInstance, $location, userService, imgurService, 
 
     fileReader.onload = (e) =>
       @$apply =>
-        console.log e.target.result, @ is $scope
         @filePreview = e.target.result
 
-  save = (file) ->
+  $scope.save = (file) ->
     $scope.submitting = false
     fileModel = _.extend(file, user_id: $scope.auth.user.id)
 
     $firebase(fileService.files).$add(fileModel)
-    .then (file)->
-      $modalInstance.close()
+    .then (file) =>
+      @close()
       $location.path '/files/' + file.name()
 
 
@@ -58,7 +64,7 @@ module.exports = ($scope, $modalInstance, $location, userService, imgurService, 
     if @file?
       return imgurService.postFile(@file)
         .then (res) =>
-          save res.data.data
+          @save res.data.data
         , ({data}) =>
           @showError data.data.error
 
@@ -66,14 +72,14 @@ module.exports = ($scope, $modalInstance, $location, userService, imgurService, 
     if @url?
       return imgurService.postUrl(@url)
       .then (res) =>
-        save res.data.data
+        @save res.data.data
       , ({data}) =>
         @showError data.data.error
 
     # Send base64 to imgur
     return imgurService.postBase64(@base64)
     .then (res) =>
-      save res.data.data
+      @save res.data.data
     , ({data}) =>
       @showError data.data.error
 

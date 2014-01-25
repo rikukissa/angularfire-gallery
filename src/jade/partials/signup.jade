@@ -1,20 +1,23 @@
-.modal-header
-  button.close(type='button', aria-hidden='true', ng-click='close()') ×
-  h4.modal-title Sign up
+.modal
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type='button', aria-hidden='true', ng-click='close()') ×
+        h4.modal-title Sign up
 
-form(role='form', ng-submit='signup()')
-  .modal-body
-    .form-group
-      label(for='username') Username
-      input#username.form-control(type='text', placeholder='Enter username', ng-model='username')
-    .form-group
-      label(for='email') Email address
-      input#email.form-control(type='email', placeholder='Enter email', ng-model='email')
-    .form-group
-      label(for='password') Password
-      input#password.form-control(type='password', placeholder='Password', ng-model='password')
+      form(role='form', ng-submit='signup()')
+        .modal-body
+          .form-group
+            label(for='username') Username
+            input#username.form-control(type='text', placeholder='Enter username', ng-model='username')
+          .form-group
+            label(for='email') Email address
+            input#email.form-control(type='email', placeholder='Enter email', ng-model='email')
+          .form-group
+            label(for='password') Password
+            input#password.form-control(type='password', placeholder='Password', ng-model='password')
 
-  .modal-footer
-    button.btn.btn-primary(type='submit')
-      span(ng-hide='signingUp') Sign up
-      span(ng-show='signingUp') Signing up...
+        .modal-footer
+          button.btn.btn-primary(type='submit')
+            span(ng-hide='signingUp') Sign up
+            span(ng-show='signingUp') Signing up...

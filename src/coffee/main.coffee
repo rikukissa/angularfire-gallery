@@ -1,12 +1,14 @@
 _           = require 'underscore'
 path        = require 'path'
 async       = require 'async'
+
 angular     = require 'angular'
 ngRoute     = require 'angular-route'
-bootstrap   = require 'angular-ui'
 md5         = require 'angular-md5'
 gravatar    = require 'angular-gravatar'
-templates   = require 'angular-ui-templates'
+
+bootstrap   = require 'angular-strap'
+templates   = require 'angular-strap-templates'
 Firebase    = require 'firebase'
 angularfire = require 'angularfire'
 SimpleLogin = require 'firebase-simple-login'
@@ -15,9 +17,10 @@ ngFileUpload = require 'ng-file-upload'
 module = angular.module 'app', [
   'ngRoute'
   'firebase'
-  'ui.bootstrap'
   'ui.gravatar'
   'angularFileUpload'
+  'mgcrea.ngStrap'
+  'mgcrea.ngStrap.modal'
 ]
 
 module.service 'fileService', ($firebase) ->
@@ -41,7 +44,6 @@ module.service 'userService', (FirebaseService, $firebase, $firebaseSimpleLogin,
     auth
       .$createUser(userData.email, userData.password)
       .then (user) ->
-        console.log _.omit(userData, 'password')
         users.$child(user.id).$set _.omit(userData, 'password')
       , (err) ->
         console.log err
@@ -78,34 +80,22 @@ module.filter 'thumbnail', () -> (val) ->
   basename = path.basename val, path.extname(val)
   val.replace basename, basename + 'b'
 
+module.controller 'loginController', require('./loginController.coffee')
+module.controller 'signupController', require('./signupController.coffee')
+module.controller 'uploadController', require('./uploadController.coffee')
+
 headerCtrl = ($scope, $modal, userService, $rootScope) ->
   $scope.auth = userService.auth
 
   $rootScope.$on '$firebaseSimpleLogin:login', ->
     $scope.user = userService.users.$child $scope.auth.user.id
 
-  $scope.login = ->
-    $modal.open
-      templateUrl: '/partials/login.html'
-      controller: require('./loginController.coffee')
-
   $scope.logout = ->
     @auth.$logout()
 
-  $scope.signup = ->
-    $modal.open
-      templateUrl: '/partials/signup.html'
-      controller: require('./signupController.coffee')
-
-  $scope.upload = ->
-    $modal.open
-      templateUrl: '/partials/upload.html'
-      controller: require('./uploadController.coffee')
-
-
 module.controller 'headerCtrl', headerCtrl
 
-module.config ($routeProvider, $locationProvider) ->
+module.config ($routeProvider, $locationProvider, $modalProvider) ->
   $locationProvider.html5Mode true
 
   $routeProvider

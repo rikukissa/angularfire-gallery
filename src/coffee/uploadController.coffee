@@ -6,7 +6,7 @@ module.exports = ($scope, $modalInstance, $location, userService, imgurService, 
 
   $scope.file = null
   $scope.url = null
-
+  $scope.filePreview = null
   $scope.submitting = false
   $scope.error = null
 
@@ -16,6 +16,17 @@ module.exports = ($scope, $modalInstance, $location, userService, imgurService, 
   $scope.onFileSelect = ($files) ->
     return unless $files? and $files.length > 0
     @file = _.first $files
+
+    # Create preview
+    return if not window.FileReader? or @file.type.indexOf('image') is -1
+
+    fileReader = new window.FileReader
+    fileReader.readAsDataURL @file
+
+    fileReader.onload = (e) =>
+      @$apply =>
+        console.log e.target.result, @ is $scope
+        @filePreview = e.target.result
 
   save = (file) ->
     $scope.submitting = false

@@ -10,6 +10,9 @@ form(role='form', ng-submit='submit()')
       | {{ error }}
 
   .modal-body
+    .form-group(ng-if='filePreview')
+      label File preview
+      img.img-thumbnail(ng-src='{{ filePreview }}')
     .form-group
       label(for='file') Select file
       input#file.form-control(type='file', ng-file-select='onFileSelect($files)')

@@ -5,32 +5,50 @@ module.exports = ($scope, $modalInstance, $location, userService, imgurService, 
   throw new Error 'user not logged in' unless $scope.auth.user?
 
   $scope.file = null
+  $scope.url = null
+
   $scope.submitting = false
   $scope.error = null
 
   $scope.close = ->
     $modalInstance.close()
 
+
+  save = (file) ->
+    $scope.submitting = false
+    fileModel = _.extend(file, user_id: $scope.auth.user.id)
+
+    $firebase(fileService.files).$add(fileModel)
+    .then (file)->
+      $modalInstance.close()
+      $location.path '/files/' + file.name()
+
+
+  showError = (err) ->
+    $scope.submitting = false
+    $scope.error = err
+
   $scope.submit = ->
-    $scope.submitting = true
-    $scope.error = null
+    unless @file? or @url?
+      return @error = 'NOTHING_SELECTED'
 
-    imgurService.postFile(@file)
+    @submitting = true
+    @error = null
+
+    # Send file to Imgur
+    if @file?
+      return imgurService.postFile(@file)
+        .then (res) =>
+          save res.data.data
+          , ->
+            console.log arguments
+        , ({data}) ->
+          showError data.data.error
+
+    # Send URL to Imgur
+    imgurService.postUrl(@url)
       .then (res) =>
-        $scope.submitting = false
-
-        file = res.data.data
-
-        fileModel = _.extend(file, user_id: $scope.auth.user.id)
-
-        $firebase(fileService.files).$add(fileModel)
-        .then (file)->
-          $modalInstance.close()
-          $location.path '/files/' + file.name()
-
-        , ->
-          console.log arguments
-
+        console.log res
+        save res.data.data
       , ({data}) ->
-        $scope.submitting = false
-        $scope.error = data.data.error
+        showError data.data.error

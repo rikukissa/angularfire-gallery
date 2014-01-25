@@ -1,4 +1,8 @@
 node_modules
-public
-
+public/*.html
+public/css/style.css
+public/js
+public/fonts
+public/partials
 vendor
+.DS_Store

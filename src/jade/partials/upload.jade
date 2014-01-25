@@ -1,29 +1,28 @@
-.modal
-  .modal-dialog
-    .modal-content(ng-file-drop='onFileSelect($files)', ng-file-paste='onFilePaste($files)')
-      .modal-header
+.aside
+  .aside-dialog
+    .aside-content(ng-file-drop='onFileSelect($files)', ng-file-paste='onFilePaste($files)')
+      .aside-header
         button.close(type='button', aria-hidden='true', ng-click='close()') ×
-        h4.modal-title Upload
+        h4.aside-title Upload
 
       form(role='form', ng-submit='submit()')
-        div(ng-switch='error', ng-show='error')
-          .alert.alert-danger(ng-switch-when='NOTHING_SELECTED')
-            | No file or URL selected
-          .alert.alert-danger(ng-switch-default)
-            | {{ error }}
+        .aside-body
+            div(ng-switch='error', ng-show='error')
+              .alert.alert-danger(ng-switch-when='NOTHING_SELECTED')
+                | No file or URL selected
+              .alert.alert-danger(ng-switch-default)
+                | {{ error }}
+            .form-group(ng-if='filePreview')
+              label File preview
+              img.img-thumbnail(ng-src='{{ filePreview }}')
+            .form-group
+              label(for='file') Select file
+              input#file.form-control(type='file', ng-file-select='onFileSelect($files)')
+            .form-group
+              label(for='url') Insert URL
+              input#url.form-control(type='text', ng-model='url')
 
-        .modal-body
-          .form-group(ng-if='filePreview')
-            label File preview
-            img.img-thumbnail(ng-src='{{ filePreview }}')
-          .form-group
-            label(for='file') Select file
-            input#file.form-control(type='file', ng-file-select='onFileSelect($files)')
-          .form-group
-            label(for='url') Insert URL
-            input#url.form-control(type='text', ng-model='url')
-
-        .modal-footer
-          button.btn.btn-primary(type='submit')
-            span(ng-hide='submitting') Submit
-            span(ng-show='submitting') Submitting...
+          .aside-footer
+            button.btn.btn-primary(type='submit')
+              span(ng-hide='submitting') Submit
+              span(ng-show='submitting') Submitting...

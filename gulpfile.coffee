@@ -36,23 +36,33 @@ compileCoffee = (debug = false) ->
       'angular-md5':
         path: './vendor/angular-gravatar/build/md5.js'
         exports: 'angular'
+
       'angular-gravatar':
         path: './vendor/angular-gravatar/build/angular-gravatar.js'
         exports: 'angular'
         depends:
           'angular-md5': 'angular'
+
       'ng-file-upload':
         path: './vendor/ng-file-upload/angular-file-upload.js'
         exports: 'ngFileUpload'
+
       'angular-route':
         path: './vendor/angular-route/angular-route.js'
-        exports: 'ngRoute'
+        exports: 'angular'
+
+      'angular-animate':
+        path: './vendor/angular-animate/angular-animate.js'
+        exports: 'angular'
+
       'firebase':
         path: './vendor/firebase/firebase.js'
         exports: 'Firebase'
+
       'angularfire':
         path: './vendor/angularfire/angularfire.js'
         exports: 'angularfire'
+
       'firebase-simple-login':
         path: './vendor/firebase-simple-login/firebase-simple-login.js'
         exports: 'FirebaseSimpleLogin'

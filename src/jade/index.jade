@@ -7,22 +7,23 @@ html
 
   body(ng-app='app')
     #header(ng-controller='headerCtrl')
-      nav.navbar.navbar-inverse
+      nav.navbar.navbar-inverse(bs-navbar)
         .navbar-header
           a.navbar-brand(href='/') Time to CC
 
         .collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-left
             li(ng-show='user', ng-controller='uploadController')
-              a(bs-modal='modal', data-template='/partials/upload.html')
+              a(bs-aside='aside', data-template='/partials/upload.html', data-animation='animation-slide-left', data-placement='left')
                 | Upload
+
           ul.nav.navbar-nav.navbar-right
             li(ng-hide='user', ng-controller='loginController')
-              a(bs-modal='modal', data-template='/partials/login.html')
+              a(bs-modal='modal', data-template='/partials/login.html', data-animation='animation-fadeAndScale', data-placement='center')
                 | Log in
 
             li(ng-hide='user', ng-controller='signupController')
-              a(bs-modal='modal', data-template='/partials/signup.html')
+              a(bs-modal='modal', data-template='/partials/signup.html', data-animation='animation-flipX', data-placement='center')
                 | Sign up
 
             li.nav-profile(ng-show='user')

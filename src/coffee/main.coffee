@@ -5,6 +5,7 @@ async       = require 'async'
 angular     = require 'angular'
 ngRoute     = require 'angular-route'
 md5         = require 'angular-md5'
+animate     = require 'angular-animate'
 gravatar    = require 'angular-gravatar'
 
 bootstrap   = require 'angular-strap'
@@ -16,11 +17,12 @@ ngFileUpload = require 'ng-file-upload'
 
 module = angular.module 'app', [
   'ngRoute'
+  'ngAnimate'
   'firebase'
   'ui.gravatar'
   'angularFileUpload'
-  'mgcrea.ngStrap'
   'mgcrea.ngStrap.modal'
+  'mgcrea.ngStrap.aside'
 ]
 
 module.service 'fileService', ($firebase) ->

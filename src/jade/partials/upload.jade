@@ -3,8 +3,11 @@
   h4.modal-title Upload
 
 form(role='form', ng-submit='submit()')
-  .alert.alert-danger(ng-show='error && error == "NOTHING_SELECTED"')
-    | No file or URL selected
+  div(ng-switch='error', ng-show='error')
+    .alert.alert-danger(ng-switch-when='NOTHING_SELECTED')
+      | No file or URL selected
+    .alert.alert-danger(ng-switch-default)
+      | {{ error }}
 
   .modal-body
     .form-group

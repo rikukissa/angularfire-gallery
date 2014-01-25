@@ -24,9 +24,9 @@ module.exports = ($scope, $modalInstance, $location, userService, imgurService, 
       $location.path '/files/' + file.name()
 
 
-  showError = (err) ->
-    $scope.submitting = false
-    $scope.error = err
+  $scope.showError = (err) ->
+    @submitting = false
+    @error = err
 
   $scope.submit = ->
     unless @file? or @url?
@@ -40,15 +40,12 @@ module.exports = ($scope, $modalInstance, $location, userService, imgurService, 
       return imgurService.postFile(@file)
         .then (res) =>
           save res.data.data
-          , ->
-            console.log arguments
-        , ({data}) ->
-          showError data.data.error
+        , ({data}) =>
+          @showError data.data.error
 
     # Send URL to Imgur
     imgurService.postUrl(@url)
       .then (res) =>
-        console.log res
         save res.data.data
-      , ({data}) ->
-        showError data.data.error
+      , ({data}) =>
+        @showError data.data.error

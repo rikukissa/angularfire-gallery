@@ -93,7 +93,7 @@ gulp.task 'coffee', -> compileCoffee(true)
 
 gulp.task 'copy-assets', ->
   gulp.src('vendor/bootstrap/dist/fonts/*')
-    .pipe gulp.dest 'public/css/fonts'
+    .pipe gulp.dest 'public/fonts/'
 
 
 gulp.task "server", ->

@@ -103,7 +103,6 @@ headerCtrl = ($scope, $modal, userService, $rootScope) ->
       controller: require('./uploadController.coffee')
 
 
-
 module.controller 'headerCtrl', headerCtrl
 
 module.config ($routeProvider, $locationProvider) ->
@@ -119,7 +118,6 @@ module.config ($routeProvider, $locationProvider) ->
       templateUrl: '/partials/file/index.html'
       controller: ($scope, $routeParams, userService, fileService, $firebase, $location) ->
         $scope.auth = userService.auth
-        console.log $scope.auth
 
         $scope.delete = ->
           @file.$remove().then () ->

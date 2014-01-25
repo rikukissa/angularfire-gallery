@@ -13,17 +13,17 @@ html
 
         .collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-left
-            li(ng-show='auth.user')
+            li(ng-show='user')
               a(href='#', ng-click='upload()') Upload
 
           ul.nav.navbar-nav.navbar-right
-            li(ng-hide='auth.user')
+            li(ng-hide='user')
               a(href='#', ng-click='login()') Log in
 
-            li(ng-hide='auth.user')
+            li(ng-hide='user')
               a(href='#', ng-click='signup()') Sign up
 
-            li.nav-profile(ng-show='auth.user')
+            li.nav-profile(ng-show='user')
               a(href='#', ng-click='logout()')
                 | Log out
                 img.nav-avatar(gravatar-src='user.email', gravatar-size='36')

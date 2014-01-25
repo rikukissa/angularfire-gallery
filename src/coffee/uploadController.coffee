@@ -2,8 +2,6 @@ _ = require 'underscore'
 module.exports = ($scope, $modalInstance, $location, userService, imgurService, fileService, $firebase) ->
   $scope.auth = userService.auth
 
-  throw new Error 'user not logged in' unless $scope.auth.user?
-
   $scope.file = null
   $scope.url = null
   $scope.base64 = null

@@ -23,6 +23,8 @@ module = angular.module 'app', [
   'angularFileUpload'
   'mgcrea.ngStrap.modal'
   'mgcrea.ngStrap.aside'
+  'mgcrea.ngStrap.tooltip'
+  'mgcrea.ngStrap.dropdown'
 ]
 
 module.controller 'loginController', require './controllers/loginController.coffee'

@@ -14,16 +14,18 @@ html
               a.header-button.header-button-upload(bs-aside='aside', data-template='/partials/upload.html', data-animation='animation-slide-left', data-placement='left')
                 span.glyphicon.glyphicon-cloud-upload
 
-          ul.nav.navbar-nav.navbar-right
-            li(ng-hide='user', ng-controller='loginController')
+
+          ul.nav.navbar-nav.navbar-right(ng-hide='user')
+            li(ng-controller='loginController')
               a.header-button(bs-modal='modal', data-template='/partials/login.html', data-animation='animation-fadeAndScale', data-placement='center')
                 | Log in
-
-            li(ng-hide='user', ng-controller='signupController')
+            li(ng-controller='signupController')
               a.header-button(bs-modal='modal', data-template='/partials/signup.html', data-animation='animation-fadeAndScale', data-placement='center')
                 | Sign up
 
-            li.nav-profile(ng-show='user')
+
+          ul.nav.navbar-nav.navbar-right(ng-show='user')
+            li
               a.header-button(href='#', ng-click='logout()')
                 | Log out
             li

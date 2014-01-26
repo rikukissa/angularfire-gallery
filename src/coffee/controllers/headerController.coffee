@@ -5,7 +5,6 @@ module.exports = ($scope, $modal, userService, $rootScope) ->
     $scope.user = userService.users.$child $scope.auth.user.id
 
   $rootScope.$on '$firebaseSimpleLogin:logout', ->
-    console.log 'foo'
     $scope.user = null
 
   $scope.logout = ->

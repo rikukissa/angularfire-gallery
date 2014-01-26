@@ -18,9 +18,11 @@ html
           ul.nav.navbar-nav.navbar-right(ng-hide='user')
             li(ng-controller='loginController')
               a.header-button(bs-modal='modal', data-template='/partials/login.html', data-animation='animation-fadeAndScale', data-placement='center')
+                span.glyphicon.glyphicon-user
                 | Log in
             li(ng-controller='signupController')
               a.header-button(bs-modal='modal', data-template='/partials/signup.html', data-animation='animation-fadeAndScale', data-placement='center')
+                span.glyphicon.glyphicon-pencil
                 | Sign up
 
 

@@ -129,7 +129,7 @@ gulp.task "watch", ->
   reloadServer.listen 35729, (err) ->
     console.error err if err?
 
-    gulp.watch "src/coffee/*.coffee", ->
+    gulp.watch "src/coffee/**/.coffee", ->
       gulp.run "coffee"
 
     gulp.watch "src/jade/**/*.jade", ->

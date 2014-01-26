@@ -1,6 +1,5 @@
 _           = require 'underscore'
 path        = require 'path'
-async       = require 'async'
 config      = require './config.coffee'
 
 angular     = require 'angular'
@@ -26,77 +25,28 @@ module = angular.module 'app', [
   'mgcrea.ngStrap.aside'
 ]
 
+module.controller 'loginController', require './controllers/loginController.coffee'
+module.controller 'signupController', require './controllers/signupController.coffee'
+module.controller 'uploadController', require './controllers/uploadController.coffee'
+module.controller 'headerController', require './controllers/headerController.coffee'
+module.controller 'filesController', require './controllers/filesController.coffee'
+module.controller 'indexController', require './controllers/indexController.coffee'
+
+module.directive 'ngFilePaste', require './directives/ngFilePaste.coffee'
+
+module.service 'userService', require './services/userService.coffee'
+module.service 'imgurService', require './services/imgurService.coffee'
+
 module.service 'fileService', ($firebase) ->
   files: new Firebase config.firebase.address + 'files'
 
 module.service 'FirebaseService', ->
   new Firebase config.firebase.address
 
-module.service 'userService', (FirebaseService, $firebase, $firebaseSimpleLogin, $q) ->
-  deferred = $q.defer()
-
-  usersRef = new Firebase config.firebase.address + 'users'
-
-  auth = $firebaseSimpleLogin FirebaseService
-
-  users = $firebase usersRef
-
-  auth: auth
-  users: users
-  create: (userData) ->
-    auth
-      .$createUser(userData.email, userData.password)
-      .then (user) ->
-        users.$child(user.id).$set _.omit(userData, 'password')
-      , (err) ->
-        console.log err
-
-
-module.service 'imgurService', require './imgurService.coffee'
-
-module.directive 'ngFilePaste', ($parse, $timeout) ->
-  restrict: 'A'
-  link: ($scope, element, attrs) ->
-    fn = $parse attrs.ngFilePaste
-    document.onpaste = (event) ->
-      items = (event.clipboardData || event.originalEvent.clipboardData).items
-
-      # Map all items to data url's
-      async.map items, (item, callback) ->
-        blob = item.getAsFile()
-        fileReader = new FileReader()
-        fileReader.onload = (evt) ->
-          callback null, evt.target.result
-        fileReader.readAsDataURL(blob)
-
-      , (err, results) ->
-        $timeout ->
-          fn $scope,
-            $files: results,
-            $event: event
-
-    $scope.$on '$destroy', ->
-      document.onpaste = null
-
-
 module.filter 'thumbnail', () -> (val) ->
   basename = path.basename val, path.extname(val)
   val.replace basename, basename + 'b'
 
-module.controller 'loginController', require('./loginController.coffee')
-module.controller 'signupController', require('./signupController.coffee')
-module.controller 'uploadController', require('./uploadController.coffee')
-
-headerCtrl = ($scope, $modal, userService, $rootScope) ->
-  $scope.auth = userService.auth
-
-  $rootScope.$on '$firebaseSimpleLogin:login', ->
-    $scope.user = userService.users.$child $scope.auth.user.id
-
-  $scope.logout = ->
-    @auth.$logout()
-
-module.controller 'headerCtrl', headerCtrl
 
 module.config ($routeProvider, $locationProvider, $modalProvider) ->
   $locationProvider.html5Mode true
@@ -104,22 +54,8 @@ module.config ($routeProvider, $locationProvider, $modalProvider) ->
   $routeProvider
     .when '/',
       templateUrl: '/partials/main/index.html'
-      controller: ($scope, userService, fileService, $firebase) ->
-        $scope.files = $firebase fileService.files
+      controller: 'indexController'
 
     .when '/files/:id',
       templateUrl: '/partials/file/index.html'
-      controller: ($scope, $routeParams, userService, fileService, $firebase, $location) ->
-        $scope.auth = userService.auth
-
-        $scope.delete = ->
-          @file.$remove().then () ->
-            $location.path '/'
-
-        $scope.file = $firebase(fileService.files).$child($routeParams.id)
-
-        $scope.file.$on 'loaded', ->
-          unless $scope.file.user_id?
-            return $location.path '/404'
-          user = userService.users.$child $scope.file.user_id
-          user.$bind($scope, 'user')
+      controller: 'filesController'

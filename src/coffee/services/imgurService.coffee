@@ -1,6 +1,6 @@
 _ = require 'underscore'
 
-config = require './config.coffee'
+config = require '../config.coffee'
 
 module.exports = ($http, $upload) ->
 

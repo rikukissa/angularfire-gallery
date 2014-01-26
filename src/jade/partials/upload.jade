@@ -13,9 +13,15 @@
                 | No file or URL selected
               .alert.alert-danger(ng-switch-default)
                 | {{ error }}
-            .form-group(ng-if='filePreview')
+            .form-group(ng-if='filePreview || url')
               label File preview
-              img.img-thumbnail(ng-src='{{ filePreview }}')
+
+              div(ng-if='filePreview')
+                img.img-thumbnail(ng-src='{{ filePreview }}')
+
+              div(ng-if='url')
+                img.img-thumbnail(ng-src='{{ url }}')
+
             .form-group
               label(for='file') Select file
               input#file.form-control(type='file', ng-file-select='onFileSelect($files)')

@@ -28,7 +28,7 @@ html
           ul.nav.navbar-nav.navbar-right.header-button(ng-show='user', bs-dropdown='dropdown', data-placement='bottom-right' data-animation='animation-flipX')
             li
               a.header-button
-                span {{ user.username }}
+                span {{ user.username | capitalize }}
             li
               img.nav-avatar(gravatar-src='user.email', gravatar-size='36')
 

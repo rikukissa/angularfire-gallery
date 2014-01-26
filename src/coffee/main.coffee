@@ -1,4 +1,5 @@
 _           = require 'underscore'
+_.str       = require 'underscore.string'
 path        = require 'path'
 config      = require './config.coffee'
 
@@ -35,9 +36,11 @@ module.controller 'filesController', require './controllers/filesController.coff
 module.controller 'indexController', require './controllers/indexController.coffee'
 
 module.directive 'ngFilePaste', require './directives/ngFilePaste.coffee'
+module.directive 'youtubeEmbed', require './directives/youtubeEmbed.coffee'
 
 module.service 'userService', require './services/userService.coffee'
 module.service 'imgurService', require './services/imgurService.coffee'
+module.service 'youtubeService', require './services/youtubeService.coffee'
 
 module.service 'fileService', ($firebase) ->
   files: new Firebase config.firebase.address + 'files'
@@ -49,6 +52,10 @@ module.filter 'thumbnail', () -> (val) ->
   basename = path.basename val, path.extname(val)
   val.replace basename, basename + 'b'
 
+module.filter 'youtubeThumbnail', () -> (id) ->
+  "http://img.youtube.com/vi/#{id}/mqdefault.jpg"
+
+module.filter 'capitalize', () -> _.str.capitalize
 
 module.config ($routeProvider, $locationProvider, $modalProvider) ->
   $locationProvider.html5Mode true

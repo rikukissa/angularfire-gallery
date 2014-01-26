@@ -13,14 +13,18 @@
                 | No file or URL selected
               .alert.alert-danger(ng-switch-default)
                 | {{ error }}
+
             .form-group(ng-if='filePreview || url')
               label File preview
 
               div(ng-if='filePreview')
                 img.img-thumbnail(ng-src='{{ filePreview }}')
 
-              div(ng-if='url')
+              div(ng-if='url && !isYoutubeUrl(url)')
                 img.img-thumbnail(ng-src='{{ url }}')
+
+              div(ng-if='url && isYoutubeUrl(url)')
+                img.img-thumbnail(ng-src='{{ youtubeId(url) | youtubeThumbnail }}')
 
             .form-group
               label(for='file') Select file

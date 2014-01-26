@@ -1,9 +1,13 @@
 _ = require 'underscore'
-module.exports = ($scope, $location, userService, imgurService, fileService, $firebase) ->
+
+module.exports = ($scope, $location, userService, imgurService, fileService, $firebase, youtubeService) ->
   $scope.auth = userService.auth
 
   $scope.$on '$destroy', ->
     console.log 'destruction'
+
+  $scope.youtubeId = youtubeService.youtubeId
+  $scope.isYoutubeUrl = youtubeService.isYoutubeUrl
 
   $scope.reset = ->
     @file = null
@@ -39,9 +43,27 @@ module.exports = ($scope, $location, userService, imgurService, fileService, $fi
       @$apply =>
         @filePreview = e.target.result
 
-  $scope.save = (file) ->
+  $scope.saveImage = (file) ->
     $scope.submitting = false
-    fileModel = _.extend(file, user_id: $scope.auth.user.id)
+    fileModel = _.extend file,
+      user_id: $scope.auth.user.id
+      file_type: 'image'
+
+    $firebase(fileService.files).$add(fileModel)
+    .then (file) =>
+      @close()
+      $location.path '/files/' + file.name()
+
+  $scope.saveVideo = (video) ->
+    id = @youtubeId video
+
+    return @showError 'INVALID_YOUTUBE_ID' unless id?
+
+    fileModel =
+      video: id
+      user_id: $scope.auth.user.id
+      file_type: 'video'
+      link: video
 
     $firebase(fileService.files).$add(fileModel)
     .then (file) =>
@@ -64,22 +86,25 @@ module.exports = ($scope, $location, userService, imgurService, fileService, $fi
     if @file?
       return imgurService.postFile(@file)
         .then (res) =>
-          @save res.data.data
+          @saveImage res.data.data
         , ({data}) =>
           @showError data.data.error
 
     # Send URL to Imgur
     if @url?
+      if @isYoutubeUrl @url
+        return @saveVideo @url
+
       return imgurService.postUrl(@url)
       .then (res) =>
-        @save res.data.data
+        @saveImage res.data.data
       , ({data}) =>
         @showError data.data.error
 
     # Send base64 to imgur
     return imgurService.postBase64(@base64)
     .then (res) =>
-      @save res.data.data
+      @saveImage res.data.data
     , ({data}) =>
       @showError data.data.error
 

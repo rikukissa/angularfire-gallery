@@ -1,12 +1,18 @@
-img.file-view.img-responsive(ng-src='{{ file.link }}')
+a(target='_blank', href='{{ file.link }}', ng-if='file.file_type === "image"')
+  img.file-view.img-responsive(ng-src='{{ file.link }}')
+
+a(target='_blank', href='{{ file.link }}', ng-if='file.file_type === "video"')
+  div(youtube-embed='{{ file.video }}')
 
 .file-header
   h2
     img(gravatar-src='user.email', gravatar-size='36')
     | {{ user.username }}
+
   .btn-toolbar.file-tools(ng-show='auth.user.id == file.user_id')
     .btn-group
       button.btn.btn-danger(ng-click='delete()')
         span.glyphicon.glyphicon-remove-circle
         |  delete
+
   .clearfix

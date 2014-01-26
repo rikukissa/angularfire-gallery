@@ -15,8 +15,14 @@
           ".read": true,
           "$fileId": {
             ".write": "auth != null && (!data.exists() || auth.id == data.child('user_id').val())",
-            ".validate": "newData.hasChildren(['user_id']) && auth.id == newData.child('user_id').val()"
-          }
+            ".validate": "newData.hasChildren(['user_id', 'link', 'file_type', 'timestamp']) && auth.id == newData.child('user_id').val()",
+            "link": {
+              ".validate": "data.parent().child('file_type').val() !== 'video' || newData.isString() && newData.val().contains('youtube.com')"
+            },
+            "timestamp": {
+              ".validate": "newData.isNumber() && newData.val() < now"
+            }
+         }
         }
     }
 }

@@ -43,33 +43,32 @@ module.exports = ($scope, $location, userService, imgurService, fileService, $fi
       @$apply =>
         @filePreview = e.target.result
 
-  $scope.saveImage = (file) ->
-    $scope.submitting = false
-    fileModel = _.extend file,
-      user_id: $scope.auth.user.id
-      file_type: 'image'
+  $scope.save = (model) ->
+    model = _.extend model,
+      timestamp: Date.now()
 
-    $firebase(fileService.files).$add(fileModel)
+    $firebase(fileService.files).$add(model)
     .then (file) =>
       @close()
       $location.path '/files/' + file.name()
+
+  $scope.saveImage = (file) ->
+    $scope.submitting = false
+
+    @save _.extend file,
+      user_id: $scope.auth.user.id
+      file_type: 'image'
 
   $scope.saveVideo = (video) ->
     id = @youtubeId video
 
     return @showError 'INVALID_YOUTUBE_ID' unless id?
 
-    fileModel =
+    @save
       video: id
       user_id: $scope.auth.user.id
       file_type: 'video'
       link: video
-
-    $firebase(fileService.files).$add(fileModel)
-    .then (file) =>
-      @close()
-      $location.path '/files/' + file.name()
-
 
   $scope.showError = (err) ->
     @submitting = false

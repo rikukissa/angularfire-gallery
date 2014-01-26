@@ -9,19 +9,56 @@ body, html
   margin 0
   font-family 'Open Sans', sans-serif
   -webkit-font-smoothing antialiased
+  background #fafafa
 
-#header
-  font-weight 400
-  .navbar
-    border-radius 0
-  .nav-profile a
-    padding 0
+.header-navigation
+  background #5cb85c
+  border-radius 0
+  margin-bottom 0
+  border-bottom 1px solid #47A447
+
+  .header-button
+    color #fff
+    &:hover
+      background #47a447
+      text-shadow 1px -1px 0px rgba(0, 0, 0, 0.1)
+
+  .header-button-upload
+    font-size 2em
+    padding 0.4em
   .nav-avatar
     padding 5px
     margin-left 10px
     margin-right 5px
-.file-tools
+
+.upload-icon
+  font-size 1.5em
+
+.file-view
+  margin auto
+
+.file-header
+  padding 1em
   margin-top 1em
+  h2
+    font-size 2em
+    margin-top 0
+  img
+    margin-right 0.2em
+
+  h2
+    float left
+
+.file-thumbnails
+  padding 0.5em
+
+
+.file-thumbnail
+  margin 0.5em
+
+.file-tools
+  vertical-align bottom
+  float right
 
 .modal-backdrop.animation-fade
   opacity .5

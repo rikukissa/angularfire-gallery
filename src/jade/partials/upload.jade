@@ -3,7 +3,8 @@
     .aside-content(ng-file-drop='onFileSelect($files)', ng-file-paste='onFilePaste($files)')
       .aside-header
         button.close(type='button', aria-hidden='true', ng-click='close()') ×
-        h4.aside-title Upload
+        h4.aside-title
+          span.glyphicon.glyphicon-cloud-upload.upload-icon
 
       form(role='form', ng-submit='submit()')
         .aside-body

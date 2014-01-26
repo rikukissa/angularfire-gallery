@@ -1,12 +1,12 @@
-img.img-thumbnail(ng-src='{{ file.link }}')
+img.file-view.img-responsive(ng-src='{{ file.link }}')
 
-.btn-toolbar.file-tools(ng-show='auth.user.id == file.user_id')
-  .btn-group
-    button.btn.btn-danger(ng-click='delete()')
-      span.glyphicon.glyphicon-remove-circle
-      |  delete
-
-
-h2
-  img(gravatar-src='user.email', gravatar-size='36')
-  | {{ user.username }}
+.file-header
+  h2
+    img(gravatar-src='user.email', gravatar-size='36')
+    | {{ user.username }}
+  .btn-toolbar.file-tools(ng-show='auth.user.id == file.user_id')
+    .btn-group
+      button.btn.btn-danger(ng-click='delete()')
+        span.glyphicon.glyphicon-remove-circle
+        |  delete
+  .clearfix

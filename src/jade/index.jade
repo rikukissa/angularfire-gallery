@@ -6,31 +6,29 @@ html
     script(src='/js/bundle.js')
 
   body(ng-app='app')
-    #header(ng-controller='headerCtrl')
-      nav.navbar.navbar-inverse(bs-navbar)
-        .navbar-header
-          a.navbar-brand(href='/') Time to CC
-
+    #header(ng-controller='headerController')
+      nav.header-navigation.navbar(bs-navbar)
         .collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-left
             li(ng-show='user', ng-controller='uploadController')
-              a(bs-aside='aside', data-template='/partials/upload.html', data-animation='animation-slide-left', data-placement='left')
-                | Upload
+              a.header-button.header-button-upload(bs-aside='aside', data-template='/partials/upload.html', data-animation='animation-slide-left', data-placement='left')
+                span.glyphicon.glyphicon-cloud-upload
 
           ul.nav.navbar-nav.navbar-right
             li(ng-hide='user', ng-controller='loginController')
-              a(bs-modal='modal', data-template='/partials/login.html', data-animation='animation-fadeAndScale', data-placement='center')
+              a.header-button(bs-modal='modal', data-template='/partials/login.html', data-animation='animation-fadeAndScale', data-placement='center')
                 | Log in
 
             li(ng-hide='user', ng-controller='signupController')
-              a(bs-modal='modal', data-template='/partials/signup.html', data-animation='animation-flipX', data-placement='center')
+              a.header-button(bs-modal='modal', data-template='/partials/signup.html', data-animation='animation-fadeAndScale', data-placement='center')
                 | Sign up
 
             li.nav-profile(ng-show='user')
-              a(href='#', ng-click='logout()')
+              a.header-button(href='#', ng-click='logout()')
                 | Log out
-                img.nav-avatar(gravatar-src='user.email', gravatar-size='36')
+            li
+              img.nav-avatar(gravatar-src='user.email', gravatar-size='36')
 
 
 
-    .container(ng-view)
+    .view(ng-view)

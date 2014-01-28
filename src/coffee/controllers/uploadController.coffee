@@ -45,7 +45,7 @@ module.exports = ($scope, $location, userService, imgurService, fileService, $fi
 
   $scope.save = (model) ->
     model = _.extend model,
-      timestamp: Date.now()
+      timestamp: Date.now() - 1000
 
     $firebase(fileService.files).$add(model)
     .then (file) =>

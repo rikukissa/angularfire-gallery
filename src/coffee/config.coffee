@@ -4,4 +4,4 @@ module.exports =
     clientId: '4dd0360487c151f'
 
   firebase:
-    address: 'https://ttcc.firebaseio.com/'
+    address: 'https://timetocc.firebaseio.com/'

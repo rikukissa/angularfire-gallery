@@ -1,5 +1,5 @@
 {
-  "firebase": "ttcc",
+  "firebase": "timetocc",
   "public": "public",
   "rules": "rules.json"
 }

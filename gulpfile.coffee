@@ -1,3 +1,4 @@
+fs         = require 'fs'
 path       = require 'path'
 gulp       = require 'gulp'
 gutil      = require 'gulp-util'
@@ -69,6 +70,17 @@ compileCoffee = (debug = false) ->
         path: './vendor/firebase-simple-login/firebase-simple-login.js'
         exports: 'FirebaseSimpleLogin'
 
+  # Generate partials file to src/coffee/partials.js
+  gulp
+    .src('src/jade/partials/**/*.jade')
+    .pipe(jade(pretty: debug))
+    .pipe(ngHtml2Js(
+        moduleName: 'partials'
+    ))
+    .pipe(concat("partials.js"))
+    .pipe(gulp.dest("./src/coffee/"))
+
+  # Generate bundle
   bundle = gulp
     .src('./src/coffee/main.coffee', read: false)
     .pipe(browserify(config))
@@ -79,13 +91,18 @@ compileCoffee = (debug = false) ->
   bundle
     .pipe(gulp.dest('./public/js/'))
     .pipe(livereload(reloadServer))
+    .on 'end', ->
+      # Remove partials file
+      fs.unlink './src/coffee/partials.js'
+
 
 compileJade = (debug = false) ->
   gulp
-    .src('src/jade/**/*.jade')
+    .src('src/jade/index.jade')
     .pipe(jade(pretty: debug))
     .pipe(gulp.dest('public/'))
     .pipe livereload(reloadServer)
+
 
 compileStylus = (debug = false) ->
   styles = gulp
@@ -97,39 +114,18 @@ compileStylus = (debug = false) ->
   styles.pipe(gulp.dest('public/css/'))
     .pipe livereload reloadServer
 
-compileTemplates = (debug = false) ->
-  gulp.src("public/partials/**/*.html")
-    .pipe(ngHtml2Js(
-        moduleName: 'partials'
-    ))
-    .pipe(concat("partials.js"))
-    .pipe(gulp.dest("./src/js"))
-
 gulp.task 'stylus', -> compileStylus(true)
 gulp.task 'stylus-production', ->compileStylus()
 
-gulp.task "jade", ->
-  compileJade(true)
-
-gulp.task "jade-production", ->
-  compileJade()
+gulp.task "jade", -> compileJade(true)
+gulp.task "jade-production", -> compileJade()
 
 gulp.task 'coffee', -> compileCoffee(true)
 gulp.task 'coffee-production', -> compileCoffee()
 
-gulp.task 'templates', ['jade', 'html2js']
-gulp.task 'templates-production', ['jade-production', 'html2js-production']
-
-gulp.task 'html2js', ['jade'], ->
-  compileTemplates()
-
-gulp.task 'html2js-production', ['jade-production'], ->
-  compileTemplates true
-
 gulp.task 'copy-assets', ->
   gulp.src('vendor/bootstrap/dist/fonts/*')
     .pipe gulp.dest 'public/fonts/'
-
 
 gulp.task "server", ->
   app = express()
@@ -152,7 +148,7 @@ gulp.task "watch", ->
       gulp.run "stylus"
 
 gulp.task "build", ->
-  gulp.run "coffee-production", "templates-production", "stylus-production", "copy-assets"
+  gulp.run "coffee-production", "jade-production", "stylus-production", "copy-assets"
 
 gulp.task "default", ->
-  gulp.run "coffee", "templates", "stylus", "copy-assets", "watch", "server"
+  gulp.run "coffee", "jade", "stylus", "copy-assets", "watch", "server"

@@ -3,18 +3,18 @@ _.str       = require 'underscore.string'
 path        = require 'path'
 config      = require './config.coffee'
 angular     = require 'angular'
-partials    = require '../js/partials'
 ngRoute     = require 'angular-route'
 md5         = require 'angular-md5'
 animate     = require 'angular-animate'
 gravatar    = require 'angular-gravatar'
-
 bootstrap   = require 'angular-strap'
 templates   = require 'angular-strap-templates'
 Firebase    = require 'firebase'
 angularfire = require 'angularfire'
 SimpleLogin = require 'firebase-simple-login'
 ngFileUpload = require 'ng-file-upload'
+
+partials    = require './partials'
 
 module = angular.module 'app', [
   'ngRoute'

@@ -141,7 +141,10 @@ gulp.task "watch", ->
     gulp.watch "src/coffee/**/*.coffee", ->
       gulp.run "coffee"
 
-    gulp.watch "src/jade/**/*.jade", ->
+    gulp.watch "src/jade/partials/**/*.jade", ->
+      gulp.run "coffee"
+
+    gulp.watch "src/jade/index.jade", ->
       gulp.run "jade"
 
     gulp.watch "src/stylus/*.styl", ->

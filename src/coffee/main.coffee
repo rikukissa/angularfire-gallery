@@ -59,7 +59,6 @@ module.filter 'youtubeThumbnail', () -> (id) ->
 module.filter 'capitalize', () -> _.str.capitalize
 
 module.config ($routeProvider, $locationProvider, $modalProvider) ->
-  $locationProvider.html5Mode true
 
   $routeProvider
     .when '/',

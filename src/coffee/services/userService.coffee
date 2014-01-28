@@ -19,4 +19,4 @@ module.exports = (FirebaseService, $firebase, $firebaseSimpleLogin, $q) ->
       .then (user) ->
         users.$child(user.id).$set _.omit(userData, 'password')
       , (err) ->
-        throw error
+        throw err

@@ -19,5 +19,5 @@ module.exports = ($scope, userService) ->
     .then =>
       @signingUp = false
       @close()
-    , =>
+    , (err) =>
       console.log arguments

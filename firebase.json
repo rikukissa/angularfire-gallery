@@ -1,0 +1,5 @@
+{
+  "firebase": "ttcc",
+  "public": "public",
+  "rules": "rules.json"
+}

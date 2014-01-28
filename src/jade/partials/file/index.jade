@@ -1,7 +1,7 @@
-a(target='_blank', href='{{ file.link }}', ng-if='file.file_type === "image"')
+a(target='_blank', ng-href='{{ file.link }}', ng-if='file.file_type === "image"')
   img.file-view.img-responsive(ng-src='{{ file.link }}')
 
-a(target='_blank', href='{{ file.link }}', ng-if='file.file_type === "video"')
+a(target='_blank', ng-href='{{ file.link }}', ng-if='file.file_type === "video"')
   div(youtube-embed='{{ file.video }}')
 
 .file-header

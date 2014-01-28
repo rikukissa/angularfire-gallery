@@ -2,8 +2,8 @@ _           = require 'underscore'
 _.str       = require 'underscore.string'
 path        = require 'path'
 config      = require './config.coffee'
-
 angular     = require 'angular'
+partials    = require '../js/partials'
 ngRoute     = require 'angular-route'
 md5         = require 'angular-md5'
 animate     = require 'angular-animate'
@@ -20,6 +20,7 @@ module = angular.module 'app', [
   'ngRoute'
   'ngAnimate'
   'firebase'
+  'partials'
   'ui.gravatar'
   'angularFileUpload'
   'mgcrea.ngStrap.modal'
@@ -62,9 +63,9 @@ module.config ($routeProvider, $locationProvider, $modalProvider) ->
 
   $routeProvider
     .when '/',
-      templateUrl: '/partials/main/index.html'
+      templateUrl: 'main/index.html'
       controller: 'indexController'
 
     .when '/files/:id',
-      templateUrl: '/partials/file/index.html'
+      templateUrl: 'file/index.html'
       controller: 'filesController'

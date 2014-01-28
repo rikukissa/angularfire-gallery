@@ -5,7 +5,8 @@
   "main": "gulpfile.js",
   "scripts": {
     "prepublish": "bower install",
-    "start": "gulp"
+    "start": "gulp",
+    "deploy": "gulp build && firebase deploy"
   },
   "keywords": [
     "gulp",
@@ -14,14 +15,14 @@
   "author": "",
   "dependencies": {
     "coffee-script": "~1.6.3",
-    "gulp-rename": "~0.2.2",
     "underscore": "~1.5.2",
     "async": "~0.2.10",
     "underscore.string": "~2.3.3",
-    "URIjs": "~1.12.0"
+    "URIjs": "~1.12.0",
   },
   "devDependencies": {
-    "gulp-rename": "~0.2.1",
+    "gulp-ngmin": "~0.1.2",
+    "gulp-rename": "~0.2.2",
     "gulp-uglify": "~0.1.0",
     "gulp-util": "~2.2.9",
     "gulp-stylus": "0.0.9",
@@ -34,6 +35,9 @@
     "tiny-lr": "0.0.5",
     "gulp-livereload": "~0.2.0",
     "bower": "~1.2.8",
-    "express": "~3.4.8"
+    "express": "~3.4.8",
+    "gulp-ng-html2js": "~0.1.4",
+    "gulp-concat": "~2.1.7",
+    "firebase-tools": "~0.1.6"
   }
 }

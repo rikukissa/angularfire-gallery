@@ -2,6 +2,7 @@ path       = require 'path'
 gulp       = require 'gulp'
 gutil      = require 'gulp-util'
 jade       = require 'gulp-jade'
+concat     = require 'gulp-concat'
 stylus     = require 'gulp-stylus'
 CSSmin     = require 'gulp-minify-css'
 browserify = require 'gulp-browserify'
@@ -11,6 +12,7 @@ coffeeify  = require 'coffeeify'
 express    = require 'express'
 lr         = require 'tiny-lr'
 livereload = require 'gulp-livereload'
+ngHtml2Js  = require 'gulp-ng-html2js'
 reloadServer = lr()
 
 compileCoffee = (debug = false) ->
@@ -72,7 +74,7 @@ compileCoffee = (debug = false) ->
     .pipe(browserify(config))
     .pipe(rename('bundle.js'))
 
-  bundle.pipe(uglify()) unless debug
+  bundle = bundle.pipe(uglify(mangle: false)) unless debug
 
   bundle
     .pipe(gulp.dest('./public/js/'))
@@ -90,21 +92,39 @@ compileStylus = (debug = false) ->
     .src('src/stylus/style.styl')
     .pipe(stylus({set: ['include css']}))
 
-  styles.pipe(CSSmin()) unless debug
+  styles = styles.pipe(CSSmin()) unless debug
 
   styles.pipe(gulp.dest('public/css/'))
     .pipe livereload reloadServer
 
-# Build tasks
-gulp.task "jade-production", -> compileJade()
+compileTemplates = (debug = false) ->
+  gulp.src("public/partials/**/*.html")
+    .pipe(ngHtml2Js(
+        moduleName: 'partials'
+    ))
+    .pipe(concat("partials.js"))
+    .pipe(gulp.dest("./src/js"))
+
+gulp.task 'stylus', -> compileStylus(true)
 gulp.task 'stylus-production', ->compileStylus()
+
+gulp.task "jade", ->
+  compileJade(true)
+
+gulp.task "jade-production", ->
+  compileJade()
+
+gulp.task 'coffee', -> compileCoffee(true)
 gulp.task 'coffee-production', -> compileCoffee()
 
-# Development tasks
-gulp.task "jade", -> compileJade(true)
-gulp.task 'stylus', -> compileStylus(true)
-gulp.task 'coffee', -> compileCoffee(true)
+gulp.task 'templates', ['jade', 'html2js']
+gulp.task 'templates-production', ['jade-production', 'html2js-production']
 
+gulp.task 'html2js', ['jade'], ->
+  compileTemplates()
+
+gulp.task 'html2js-production', ['jade-production'], ->
+  compileTemplates true
 
 gulp.task 'copy-assets', ->
   gulp.src('vendor/bootstrap/dist/fonts/*')
@@ -117,13 +137,6 @@ gulp.task "server", ->
   app.get '*', (req, res) ->
     res.sendfile './public/index.html'
   app.listen 3000
-
-  # staticFiles = new nodeStatic.Server './public'
-  # require('http').createServer (req, res) ->
-  #   req.addListener 'end', ->
-  #     staticFiles.serve req, res
-  #   req.resume()
-  # .listen 9001
 
 gulp.task "watch", ->
   reloadServer.listen 35729, (err) ->
@@ -139,7 +152,7 @@ gulp.task "watch", ->
       gulp.run "stylus"
 
 gulp.task "build", ->
-  gulp.run "coffee-production", "jade-production", "stylus-production", "copy-assets"
+  gulp.run "coffee-production", "templates-production", "stylus-production", "copy-assets"
 
 gulp.task "default", ->
-  gulp.run "coffee", "jade", "stylus", "copy-assets", "watch", "server"
+  gulp.run "coffee", "templates", "stylus", "copy-assets", "watch", "server"

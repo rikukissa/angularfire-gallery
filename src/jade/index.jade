@@ -2,7 +2,7 @@ doctype html
 html
   head
     title Time to CC
-    link(rel='stylesheet', href='/css/style.css')
+    link(rel='stylesheet', type='text/css', href='css/style.css')
 
   body(ng-app='app')
     #header(ng-controller='headerController')
@@ -10,28 +10,28 @@ html
         .collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-left
             li(ng-show='user', ng-controller='uploadController')
-              a.header-button.header-button-upload(bs-aside='aside', data-template='/partials/upload.html', data-animation='animation-slide-left', data-placement='left')
+              a.header-button.header-button-upload(bs-aside='aside', data-template='upload.html', data-animation='animation-slide-left', data-placement='left')
                 span.glyphicon.glyphicon-cloud-upload
 
           ul.nav.navbar-nav.navbar-right(ng-hide='user')
             li(ng-controller='loginController')
-              a.header-button(bs-modal='modal', data-template='/partials/login.html', data-animation='animation-fadeAndScale', data-placement='center')
+              a.header-button(bs-modal='modal', data-template='login.html', data-animation='animation-fadeAndScale', data-placement='center')
                 span.glyphicon.glyphicon-user
                 | Log in
 
             li(ng-controller='signupController')
-              a.header-button(bs-modal='modal', data-template='/partials/signup.html', data-animation='animation-fadeAndScale', data-placement='center')
+              a.header-button(bs-modal='modal', data-template='signup.html', data-animation='animation-fadeAndScale', data-placement='center')
                 span.glyphicon.glyphicon-pencil
                 | Sign up
 
           ul.nav.navbar-nav.navbar-right.header-button(ng-show='user', bs-dropdown='dropdown', data-placement='bottom-right' data-animation='animation-flipX')
             li
               a.header-button
-                span {{ user.username | capitalize }}
+                span {{ user.username | capitalize }}
             li
               img.nav-avatar(gravatar-src='user.email', gravatar-size='36')
 
 
 
     .view(ng-view)
-    script(src='/js/bundle.js')
+    script(src='js/bundle.js')

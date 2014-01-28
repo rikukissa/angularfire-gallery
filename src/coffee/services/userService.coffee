@@ -1,3 +1,4 @@
+_ = require 'underscore'
 config = require '../config.coffee'
 
 module.exports = (FirebaseService, $firebase, $firebaseSimpleLogin, $q) ->
@@ -14,7 +15,8 @@ module.exports = (FirebaseService, $firebase, $firebaseSimpleLogin, $q) ->
   create: (userData) ->
     auth
       .$createUser(userData.email, userData.password)
+
       .then (user) ->
         users.$child(user.id).$set _.omit(userData, 'password')
       , (err) ->
-        console.log err
+        throw error

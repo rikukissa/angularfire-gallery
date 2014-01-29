@@ -1,18 +1,19 @@
-a(target='_blank', ng-href='{{ file.link }}', ng-if='file.file_type === "image"')
-  img.file-view.img-responsive(ng-src='{{ file.link }}')
+div(ng-repeat='item in files')
+  a(target='_blank', ng-href='{{ item.file.link }}', ng-if='item.file.file_type === "image"')
+    img.file-view.img-responsive(ng-src='{{ item.file.link }}')
 
-a(target='_blank', ng-href='{{ file.link }}', ng-if='file.file_type === "video"')
-  div(youtube-embed='{{ file.video }}')
+  a(target='_blank', ng-href='{{ item.file.link }}', ng-if='item.file.file_type === "video"')
+    div(youtube-embed='{{ item.file.video }}')
 
-.file-header
-  h2
-    img(gravatar-src='user.email', gravatar-size='36')
-    | {{ user.username }}
+  .file-header
+    h2
+      img(gravatar-src='item.user.email', gravatar-size='36')
+      | {{ item.user.username }}
 
-  .btn-toolbar.file-tools(ng-show='auth.user.id == file.user_id')
-    .btn-group
-      button.btn.btn-danger(ng-click='delete()')
-        span.glyphicon.glyphicon-remove-circle
-        |  delete
+    .btn-toolbar.file-tools(ng-show='auth.user.id == item.file.user_id')
+      .btn-group
+        button.btn.btn-danger(ng-click='delete()')
+          span.glyphicon.glyphicon-remove-circle
+          |  delete
 
-  .clearfix
+    .clearfix

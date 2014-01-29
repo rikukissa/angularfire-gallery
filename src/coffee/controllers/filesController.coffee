@@ -1,3 +1,5 @@
+_ = require 'underscore'
+
 module.exports = ($scope, $routeParams, userService, fileService, $firebase, $location) ->
   $scope.auth = userService.auth
 
@@ -5,8 +7,16 @@ module.exports = ($scope, $routeParams, userService, fileService, $firebase, $lo
     @file.$remove().then () ->
       $location.path '/'
 
-  $scope.file = $firebase fileService.files.child($routeParams.id)
+  fileIds = $routeParams.id.split(',')
 
-  $scope.file.$on 'loaded', ->
-    return $location.path '/404' unless $scope.file.user_id?
-    $scope.user = $firebase userService.users.child $scope.file.user_id
+  $scope.files = []
+
+  _.each fileIds, (fileId) ->
+    fileObj = {}
+
+    $scope.files.push fileObj
+
+    fileObj.file = $firebase fileService.files.child fileId
+
+    fileObj.file.$on 'loaded', ->
+      fileObj.user = $firebase userService.users.child fileObj.file.user_id

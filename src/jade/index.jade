@@ -5,31 +5,28 @@ html
     link(rel='stylesheet', type='text/css', href='css/style.css')
 
   body(ng-app='app')
-    #header(ng-controller='headerController')
-      nav.header-navigation.navbar(bs-navbar)
-        .collapse.navbar-collapse
-          ul.nav.navbar-nav.navbar-left
-            li(ng-show='user', ng-controller='uploadController')
-              a.header-button.header-button-upload(bs-aside='aside', data-template='upload.html', data-animation='animation-slide-left', data-placement='left')
-                span.glyphicon.glyphicon-cloud-upload
+    nav.header(ng-controller='headerController')
+      ul.header-section
+        li.header-button.header-button-upload(ng-show='user', ng-controller='uploadController', bs-aside='aside', data-template='upload.html', data-animation='animation-slide-left', data-placement='left')
+          a
+            span.glyphicon.glyphicon-cloud-upload
 
-          ul.nav.navbar-nav.navbar-right(ng-hide='user')
-            li(ng-controller='loginController')
-              a.header-button(bs-modal='modal', data-template='login.html', data-animation='animation-fadeAndScale', data-placement='center')
-                span.glyphicon.glyphicon-user
-                | Log in
+      ul.header-section.header-section-right(ng-show='user')
+        li.header-button.header-button-profile(bs-dropdown='dropdown', data-placement='bottom-right' data-animation='animation-flipX')
+          a
+            span {{ user.username | capitalize }}
+            img.header-avatar(gravatar-src='user.email', gravatar-size='36')
 
-            li(ng-controller='signupController')
-              a.header-button(bs-modal='modal', data-template='signup.html', data-animation='animation-fadeAndScale', data-placement='center')
-                span.glyphicon.glyphicon-pencil
-                | Sign up
+      ul.header-section.header-section-right(ng-hide='user')
+        li.header-button(ng-controller='loginController', bs-modal='modal', data-template='login.html', data-animation='animation-fadeAndScale', data-placement='center')
+          a
+            span.glyphicon.glyphicon-user
+            | Log in
 
-          ul.nav.navbar-nav.navbar-right.header-button(ng-show='user', bs-dropdown='dropdown', data-placement='bottom-right' data-animation='animation-flipX')
-            li
-              a.header-button
-                span {{ user.username | capitalize }}
-            li
-              img.nav-avatar(gravatar-src='user.email', gravatar-size='36')
+        li.header-button(ng-controller='signupController', bs-modal='modal', data-template='signup.html', data-animation='animation-fadeAndScale', data-placement='center')
+          a
+            span.glyphicon.glyphicon-pencil
+            | Sign up
 
 
 

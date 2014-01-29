@@ -11,32 +11,61 @@ body, html
   -webkit-font-smoothing antialiased
   background #fafafa
 
-.header-navigation
+.header
+  height 60px
   background #5cb85c
-  border-radius 0
-  margin-bottom 0
   border-bottom 1px solid #47A447
+
+  .header-section
+    list-style none
+    margin-bottom 0
+    padding 0
+    height 60px
+    line-height 60px
+    float left
+  .header-section-right
+    float right
 
   .header-button
     color #fff
+    padding 0 20px
+    float left
+    cursor pointer
+    user-select none
+    a
+      color #fff
+    a:hover
+      text-decoration none
     &:hover
       background #47a447
       text-shadow 1px -1px 0px rgba(0, 0, 0, 0.1)
 
-  .navbar-collapse
-    padding-left 0
-
   .header-button-upload
     font-size 2em
-    padding 0.4em 1em
+    padding 0 30px
 
-  .navbar-right
-    height 50px
+  .header-avatar
+    margin-left 1em
+  // .header-button
+  //   color #fff
+  //   &:hover
+  //     background #47a447
+  //     text-shadow 1px -1px 0px rgba(0, 0, 0, 0.1)
 
-  .nav-avatar
-    padding 5px
-    margin-left 10px
-    margin-right 5px
+  // .navbar-collapse
+  //   padding-left 0
+
+  // .header-button-upload
+  //   font-size 2em
+  //   padding 0.4em 1em
+
+  // .navbar-right
+  //   height 50px
+
+  // .nav-avatar
+  //   padding 5px
+  //   margin-left 10px
+  //   margin-right 5px
 
 .upload-icon
   font-size 1.5em

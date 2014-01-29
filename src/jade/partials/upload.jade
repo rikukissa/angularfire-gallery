@@ -24,11 +24,12 @@
                 img.img-thumbnail(ng-src='{{ url }}')
 
               div(ng-if='url && isYoutubeUrl(url)')
-                img.img-thumbnail(ng-src='{{ youtubeId(url) | youtubeThumbnail }}')
+                img.img-thumbnail(ng-src='{{ youtubeThumbnail(url) }}')
 
             .form-group
               label(for='file') Select file
               input#file.form-control(type='file', ng-file-select='onFileSelect($files)')
+
             .form-group
               label(for='url') Insert URL
               input#url.form-control(type='text', ng-model='url')

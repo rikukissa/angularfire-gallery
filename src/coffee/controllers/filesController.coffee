@@ -5,10 +5,8 @@ module.exports = ($scope, $routeParams, userService, fileService, $firebase, $lo
     @file.$remove().then () ->
       $location.path '/'
 
-  $scope.file = $firebase(fileService.files).$child($routeParams.id)
+  $scope.file = $firebase fileService.files.child($routeParams.id)
 
   $scope.file.$on 'loaded', ->
-    unless $scope.file.user_id?
-      return $location.path '/404'
-    user = userService.users.$child $scope.file.user_id
-    user.$bind($scope, 'user')
+    return $location.path '/404' unless $scope.file.user_id?
+    $scope.user = $firebase userService.users.child $scope.file.user_id

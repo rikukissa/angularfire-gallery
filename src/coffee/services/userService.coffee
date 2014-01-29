@@ -1,22 +1,27 @@
 _ = require 'underscore'
 config = require '../config.coffee'
 
-module.exports = (FirebaseService, $firebase, $firebaseSimpleLogin, $q) ->
-  deferred = $q.defer()
+module.exports = (FirebaseService, $firebaseSimpleLogin, $rootScope) ->
 
   usersRef = new Firebase config.firebase.address + 'users'
 
-  auth = $firebaseSimpleLogin FirebaseService
+  service =
+    user: null
+    users: usersRef
+    auth: $firebaseSimpleLogin FirebaseService
+    create: (userData) ->
+      @auth
+        .$createUser(userData.email, userData.password)
 
-  users = $firebase usersRef
+        .then (user) =>
+          @users.child(user.id).set _.omit(userData, 'password')
+        , (err) ->
+          throw err
 
-  auth: auth
-  users: users
-  create: (userData) ->
-    auth
-      .$createUser(userData.email, userData.password)
+  $rootScope.$on '$firebaseSimpleLogin:login', ->
+    service.user = service.users.child service.auth.user.id
 
-      .then (user) ->
-        users.$child(user.id).$set _.omit(userData, 'password')
-      , (err) ->
-        throw err
+  $rootScope.$on '$firebaseSimpleLogin:logout', ->
+    service.user = null
+
+  service

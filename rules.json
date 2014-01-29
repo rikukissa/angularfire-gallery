@@ -12,15 +12,24 @@
         },
         "files": {
           ".write": "auth != null && !data.exists()",
-          ".read": true,
+          ".read": "auth != null",
           "$fileId": {
             ".write": "auth != null && (!data.exists() || auth.id == data.child('user_id').val())",
-            ".validate": "newData.hasChildren(['user_id', 'link', 'file_type', 'timestamp']) && auth.id == newData.child('user_id').val()",
+            ".validate": "newData.hasChildren(['user_id', 'link', 'file_type', 'timestamp', 'thumbnail', 'service']) && auth.id == newData.child('user_id').val()",
+            "file_type": {
+              ".validate": "newData.val() === 'video' || newData.val() === 'image'"
+            },
+            "service": {
+              ".validate": "newData.val() === 'imgur' || newData.val() === 'youtube'"
+            },
             "link": {
-              ".validate": "data.parent().child('file_type').val() !== 'video' || newData.isString() && newData.val().contains('youtube.com')"
+              ".validate": "newData.isString() && ((newData.parent().child('service').val() === 'youtube' && newData.val().contains('youtube.com')) || (newData.parent().child('service').val() === 'imgur' && newData.val().contains('imgur.com')))"
+            },
+            "thumbnail": {
+              ".validate": "newData.isString() && ((newData.parent().child('service').val() === 'youtube' && newData.val().contains('youtube.com')) || (newData.parent().child('service').val() === 'imgur' && newData.val().contains('imgur.com')))"
             },
             "timestamp": {
-              ".validate": "newData.isNumber() && newData.val() < now"
+              ".validate": "newData.isNumber() && newData.val() <= now"
             }
          }
         }

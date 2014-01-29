@@ -1,8 +1,8 @@
 _ = require 'underscore'
-
+path = require 'path'
 config = require '../config.coffee'
 
-module.exports = ($http, $upload) ->
+module.exports = ($http, $upload, $q) ->
 
   clientId = 'Client-ID ' + config.imgur.clientId
 
@@ -13,22 +13,34 @@ module.exports = ($http, $upload) ->
   defaults = {}
   defaults.album = config.imgur.album if config.imgur.album?
 
+  getThumbnail: (url) ->
+    basename = path.basename url, path.extname(url)
+    url.replace basename, basename + 'b'
+
   postFile: (file) ->
-    $upload.upload
+    $q.when($upload.upload(
       url: imageEndpoint
       file: file
       headers:
         'Authorization': clientId
-      data: _.extend defaults, type: 'file'
-
+      data: _.extend(defaults, type: 'file')
       fileFormDataName: 'image'
+    )).then (response) ->
+      response.data.data
+    , (err) -> throw err
 
   postUrl: (url) ->
-    $http.post imageEndpoint, _.extend defaults,
+    $http.post(imageEndpoint, _.extend defaults,
       image: url
       type: 'URL'
+    ).then (response) ->
+      response.data.data
+    , (err) -> throw err
 
   postBase64: (base64) ->
-    $http.post imageEndpoint, _.extend defaults,
+    $http.post(imageEndpoint, _.extend defaults,
       image: base64
       type: 'base64'
+    ).then (response) ->
+      response.data.data
+    , (err) -> throw err

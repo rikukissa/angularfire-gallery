@@ -1,16 +1,16 @@
-module.exports = ($scope, $modal, userService, $rootScope, $dropdown) ->
+module.exports = ($scope, $rootScope, $firebase, $dropdown, userService) ->
   $scope.auth = userService.auth
-
-  $rootScope.$on '$firebaseSimpleLogin:login', ->
-    $scope.user = userService.users.$child $scope.auth.user.id
-
-  $rootScope.$on '$firebaseSimpleLogin:logout', ->
-    $scope.user = null
 
   $scope.dropdown = [
       'text': 'Log out'
       'click': 'logout()'
   ]
+
+  $rootScope.$on '$firebaseSimpleLogin:login', ->
+    $scope.user = $firebase userService.user
+
+  $rootScope.$on '$firebaseSimpleLogin:logout', ->
+    $scope.user = null
 
   $scope.logout = ->
     @auth.$logout()

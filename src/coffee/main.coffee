@@ -49,13 +49,6 @@ module.service 'fileService', ($firebase) ->
 module.service 'FirebaseService', ->
   new Firebase config.firebase.address
 
-module.filter 'thumbnail', () -> (val) ->
-  basename = path.basename val, path.extname(val)
-  val.replace basename, basename + 'b'
-
-module.filter 'youtubeThumbnail', () -> (id) ->
-  "http://img.youtube.com/vi/#{id}/mqdefault.jpg"
-
 module.filter 'capitalize', () -> _.str.capitalize
 
 module.config ($routeProvider, $locationProvider, $modalProvider) ->

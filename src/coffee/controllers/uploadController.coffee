@@ -8,6 +8,7 @@ module.exports = ($scope, $location, userService, imgurService, fileService, $fi
 
   $scope.youtubeId = youtubeService.youtubeId
   $scope.isYoutubeUrl = youtubeService.isYoutubeUrl
+  $scope.youtubeThumbnail = youtubeService.getThumbnail
 
   $scope.reset = ->
     @file = null
@@ -44,20 +45,24 @@ module.exports = ($scope, $location, userService, imgurService, fileService, $fi
         @filePreview = e.target.result
 
   $scope.save = (model) ->
-    model = _.extend model,
-      timestamp: Date.now() - 1000
+    model.timestamp = Date.now() - 1000
 
     $firebase(fileService.files).$add(model)
     .then (file) =>
       @close()
       $location.path '/files/' + file.name()
+    , (err) ->
+      console.log err
 
   $scope.saveImage = (file) ->
     $scope.submitting = false
 
-    @save _.extend file,
+    @save
+      link: file.link
       user_id: $scope.auth.user.id
       file_type: 'image'
+      service: 'imgur'
+      thumbnail: imgurService.getThumbnail file.link
 
   $scope.saveVideo = (video) ->
     id = @youtubeId video
@@ -69,6 +74,8 @@ module.exports = ($scope, $location, userService, imgurService, fileService, $fi
       user_id: $scope.auth.user.id
       file_type: 'video'
       link: video
+      service: 'youtube'
+      thumbnail: youtubeService.getThumbnail video
 
   $scope.showError = (err) ->
     @submitting = false
@@ -81,13 +88,13 @@ module.exports = ($scope, $location, userService, imgurService, fileService, $fi
     @submitting = true
     @error = null
 
+    save = _.bind @saveImage, @
+    error = _.bind @showError, @
+
     # Send file to Imgur
     if @file?
       return imgurService.postFile(@file)
-        .then (res) =>
-          @saveImage res.data.data
-        , ({data}) =>
-          @showError data.data.error
+        .then save, error
 
     # Send URL to Imgur
     if @url?
@@ -95,15 +102,9 @@ module.exports = ($scope, $location, userService, imgurService, fileService, $fi
         return @saveVideo @url
 
       return imgurService.postUrl(@url)
-      .then (res) =>
-        @saveImage res.data.data
-      , ({data}) =>
-        @showError data.data.error
+      .then save, error
 
     # Send base64 to imgur
     return imgurService.postBase64(@base64)
-    .then (res) =>
-      @saveImage res.data.data
-    , ({data}) =>
-      @showError data.data.error
+    .then save, error
 

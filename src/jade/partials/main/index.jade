@@ -1,4 +1,4 @@
 .file-thumbnails
   a(ng-href='#/files/{{ file.$id }}', ng-repeat='file in files | orderByPriority | orderBy:"-$id"')
-    img.file-thumbnail.img-thumbnail(ng-src='{{ file.link | thumbnail }}', ng-if='file.file_type === "image"')
-    img.file-thumbnail.img-thumbnail(ng-src='{{ file.video | youtubeThumbnail }}', ng-if='file.file_type === "video"')
+    img.file-thumbnail.img-thumbnail(ng-src='{{ file.thumbnail }}')
+

@@ -1,10 +1,7 @@
 _ = require 'underscore'
 
-module.exports = ($scope, $location, userService, imgurService, fileService, $firebase, youtubeService) ->
+module.exports = ($scope, $q, $location, userService, imgurService, fileService, $firebase, youtubeService) ->
   $scope.auth = userService.auth
-
-  $scope.$on '$destroy', ->
-    console.log 'destruction'
 
   $scope.youtubeId = youtubeService.youtubeId
   $scope.isYoutubeUrl = youtubeService.isYoutubeUrl
@@ -46,17 +43,15 @@ module.exports = ($scope, $location, userService, imgurService, fileService, $fi
 
   $scope.save = (model) ->
     model.timestamp = Date.now() - 1000
+    deferred = $q.defer()
 
-    $firebase(fileService.files).$add(model)
-    .then (file) =>
-      @close()
-      $location.path '/files/' + file.name()
-    , (err) ->
-      console.log err
+    ref = fileService.files.push model, (err) ->
+      deferred.reject err if err?
+      deferred.resolve ref
+
+    deferred.promise
 
   $scope.saveImage = (file) ->
-    $scope.submitting = false
-
     @save
       link: file.link
       user_id: $scope.auth.user.id
@@ -66,8 +61,7 @@ module.exports = ($scope, $location, userService, imgurService, fileService, $fi
 
   $scope.saveVideo = (video) ->
     id = @youtubeId video
-
-    return @showError 'INVALID_YOUTUBE_ID' unless id?
+    throw new Error 'Invalid Youtube id' unless id?
 
     @save
       video: id
@@ -77,34 +71,42 @@ module.exports = ($scope, $location, userService, imgurService, fileService, $fi
       service: 'youtube'
       thumbnail: youtubeService.getThumbnail video
 
-  $scope.showError = (err) ->
-    @submitting = false
-    @error = err
-
   $scope.submit = ->
     unless @file? or @url? or @base64?
-      return @error = 'NOTHING_SELECTED'
+      return @error = 'Nothing to upload'
 
     @submitting = true
     @error = null
 
     save = _.bind @saveImage, @
-    error = _.bind @showError, @
 
-    # Send file to Imgur
+    promises = []
+
     if @file?
-      return imgurService.postFile(@file)
-        .then save, error
+      console.log @file
+      promises.push imgurService.postFile(@file).then save
 
-    # Send URL to Imgur
     if @url?
       if @isYoutubeUrl @url
-        return @saveVideo @url
-
-      return imgurService.postUrl(@url)
-      .then save, error
+        promises.push @saveVideo @url
+      else
+        # Send file to Imgur
+        promises.push imgurService.postUrl(@url).then save
 
     # Send base64 to imgur
-    return imgurService.postBase64(@base64)
-    .then save, error
+    if @base64?
+      promises.push imgurService.postBase64(@base64).then save
+
+    $q.all(promises)
+      .then (results) =>
+        @submitting = false
+        $location.path '/files/' + _.map(results, (result) ->
+          result.name()
+        ).join ','
+
+        @close()
+
+      , (error) =>
+        @submitting = false
+        @error = error.message
 

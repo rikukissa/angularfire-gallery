@@ -8,11 +8,8 @@
 
       form(role='form', ng-submit='submit()')
         .aside-body
-            div(ng-switch='error', ng-show='error')
-              .alert.alert-danger(ng-switch-when='NOTHING_SELECTED')
-                | No file or URL selected
-              .alert.alert-danger(ng-switch-default)
-                | {{ error }}
+            .alert.alert-danger(ng-show='error')
+              | {{ error }}
 
             .form-group(ng-if='filePreview || url')
               label File preview

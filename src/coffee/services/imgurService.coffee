@@ -27,7 +27,8 @@ module.exports = ($http, $upload, $q) ->
       fileFormDataName: 'image'
     )).then (response) ->
       response.data.data
-    , (err) -> throw err
+    , (response) ->
+      throw new Error response.data.data.error
 
   postUrl: (url) ->
     $http.post(imageEndpoint, _.extend defaults,
@@ -35,7 +36,8 @@ module.exports = ($http, $upload, $q) ->
       type: 'URL'
     ).then (response) ->
       response.data.data
-    , (err) -> throw err
+    , (response) ->
+      throw new Error response.data.data.error
 
   postBase64: (base64) ->
     $http.post(imageEndpoint, _.extend defaults,
@@ -43,4 +45,5 @@ module.exports = ($http, $upload, $q) ->
       type: 'base64'
     ).then (response) ->
       response.data.data
-    , (err) -> throw err
+    , (response) ->
+      throw new Error response.data.data.error

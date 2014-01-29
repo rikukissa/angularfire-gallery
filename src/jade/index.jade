@@ -7,26 +7,20 @@ html
   body(ng-app='app')
     nav.header(ng-controller='headerController')
       ul.header-section
-        li.header-button.header-button-upload(ng-show='user', ng-controller='uploadController', bs-aside='aside', data-template='upload.html', data-animation='animation-slide-left', data-placement='left')
-          a
-            span.glyphicon.glyphicon-cloud-upload
+        li.header-button(ng-show='user', ng-controller='uploadController', bs-aside='aside', data-template='upload.html', data-animation='animation-slide-left', data-placement='left')
+          | Upload
 
       ul.header-section.header-section-right(ng-show='user')
         li.header-button.header-button-profile(bs-dropdown='dropdown', data-placement='bottom-right' data-animation='animation-flipX')
-          a
-            span {{ user.username | capitalize }}
-            img.header-avatar(gravatar-src='user.email', gravatar-size='36')
+          img.header-avatar(gravatar-src='user.email', gravatar-size='36')
+          span {{ user.username | capitalize }}
 
       ul.header-section.header-section-right(ng-hide='user')
         li.header-button(ng-controller='loginController', bs-modal='modal', data-template='login.html', data-animation='animation-fadeAndScale', data-placement='center')
-          a
-            span.glyphicon.glyphicon-user
-            | Log in
+          | Log in
 
         li.header-button(ng-controller='signupController', bs-modal='modal', data-template='signup.html', data-animation='animation-fadeAndScale', data-placement='center')
-          a
-            span.glyphicon.glyphicon-pencil
-            | Sign up
+          | Sign up
 
 
 

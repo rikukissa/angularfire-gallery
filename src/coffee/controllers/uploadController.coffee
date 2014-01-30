@@ -1,4 +1,5 @@
 _ = require 'underscore'
+Firebase = require 'firebase'
 
 module.exports = ($scope, $q, $location, userService, imgurService, fileService, $firebase, youtubeService) ->
   $scope.auth = userService.auth
@@ -42,7 +43,7 @@ module.exports = ($scope, $q, $location, userService, imgurService, fileService,
         @filePreview = e.target.result
 
   $scope.save = (model) ->
-    model.timestamp = Date.now() - 1000
+    model.timestamp = Firebase.ServerValue.TIMESTAMP
     deferred = $q.defer()
 
     ref = fileService.files.push model, (err) ->

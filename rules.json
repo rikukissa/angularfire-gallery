@@ -7,7 +7,10 @@
           ".write": "!data.exists()",
           "$userId": {
             ".write": "auth != null && auth.id == $userId",
-            ".validate": "auth.id == $userId"
+            ".validate": "newData.hasChildren(['email', 'username'])",
+            "username": {
+              ".validate": "newData.isString() && newData.val().length >= 4"
+            }
           }
         },
         "files": {
@@ -31,7 +34,10 @@
             "timestamp": {
               ".validate": "newData.val() === now"
             }
-         }
+          }
+        },
+        "admin_users": {
+          ".write": "auth != null && data.child(auth.id).exists()"
         }
     }
 }

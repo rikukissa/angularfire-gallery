@@ -7,7 +7,7 @@ html
   body(ng-app='app')
     nav.header(ng-controller='headerController')
       ul.header-section
-        li.header-button(ng-show='user', ng-controller='uploadController', bs-aside='aside', data-template='upload.html', data-animation='animation-slide-left', data-placement='left')
+        li.header-button(ng-show='user', ng-controller='uploadController', bs-modal='modal', data-template='upload.html', data-animation='animation-slide-left', data-placement='center')
           | Upload
 
       ul.header-section.header-section-right(ng-show='user')

@@ -1,18 +1,27 @@
 _ = require 'underscore'
 Firebase = require 'firebase'
 
-module.exports = ($scope, $q, $location, userService, imgurService, fileService, $firebase, youtubeService) ->
+module.exports = ($scope, $q, $location, $routeParams, userService, imgurService, fileService, $firebase, youtubeService) ->
   $scope.auth = userService.auth
 
-  $scope.youtubeId = youtubeService.youtubeId
-  $scope.isYoutubeUrl = youtubeService.isYoutubeUrl
-  $scope.youtubeThumbnail = youtubeService.getThumbnail
+  if $location.$$path is '/upload'
+    $scope.$watch '$$childHead', (scope) ->
+      scope.$show()
 
   $scope.reset = ->
-    @file = null
-    @url = null
-    @base64 = null
-    @filePreview = null
+    @preview =
+      file: null
+      url: null
+      paste: null
+      youtube: null
+      drop: null
+    @data =
+      file: null
+      url: null
+      paste: null
+      youtube: null
+      drop: null
+
     @submitting = false
     @error = null
 
@@ -22,25 +31,44 @@ module.exports = ($scope, $q, $location, userService, imgurService, fileService,
 
   $scope.reset()
 
+  # Event handlers
+  $scope.urlChange = ->
+    if @data.url?
+      return @preview.url = @data.url
+    @preview.url = null
+
+  $scope.youtubeChange = ->
+    if @data.youtube?
+      @preview.youtube = youtubeService.getThumbnail @data.youtube
+      return
+    @preview.youtube = null
+
   $scope.onFilePaste = ($files) ->
     return unless $files? and $files.length > 0
     dataUrl = _.first($files)
-    @base64 = dataUrl.substr(dataUrl.indexOf('iVBOR'))
-    @filePreview = dataUrl
+    @preview.paste = dataUrl
+    @data.paste = dataUrl.substr(dataUrl.indexOf('iVBOR'))
 
-  $scope.onFileSelect = ($files) ->
+  $scope.onFileDrop = ($files) ->
+    @onFileSelect $files, true
+
+  $scope.onFileSelect = ($files, drop = false) ->
     return unless $files? and $files.length > 0
-    @file = _.first $files
+
+    target = if drop then 'drop' else 'file'
+
+    @data[target] = _.first $files
 
     # Create preview
-    return if not window.FileReader? or @file.type.indexOf('image') is -1
+    return if not window.FileReader? or @data[target].type.indexOf('image') is -1
 
     fileReader = new window.FileReader
-    fileReader.readAsDataURL @file
+    fileReader.readAsDataURL @data[target]
 
     fileReader.onload = (e) =>
       @$apply =>
-        @filePreview = e.target.result
+        @preview[target] = e.target.result
+
 
   $scope.save = (model) ->
     model.timestamp = Firebase.ServerValue.TIMESTAMP
@@ -61,7 +89,7 @@ module.exports = ($scope, $q, $location, userService, imgurService, fileService,
       thumbnail: imgurService.getThumbnail file.link
 
   $scope.saveVideo = (video) ->
-    id = @youtubeId video
+    id = youtubeService.youtubeId video
     throw new Error 'Invalid Youtube id' unless id?
 
     @save
@@ -73,7 +101,9 @@ module.exports = ($scope, $q, $location, userService, imgurService, fileService,
       thumbnail: youtubeService.getThumbnail video
 
   $scope.submit = ->
-    unless @file? or @url? or @base64?
+    unless  _.some(@data, (data) ->
+      data?
+    )
       return @error = 'Nothing to upload'
 
     @submitting = true
@@ -83,20 +113,20 @@ module.exports = ($scope, $q, $location, userService, imgurService, fileService,
 
     promises = []
 
-    if @file?
-      console.log @file
-      promises.push imgurService.postFile(@file).then save
+    if @data.file?
+      promises.push imgurService.postFile(@data.file).then save
 
-    if @url?
-      if @isYoutubeUrl @url
-        promises.push @saveVideo @url
-      else
-        # Send file to Imgur
-        promises.push imgurService.postUrl(@url).then save
+    if @data.drop?
+      promises.push imgurService.postFile(@data.drop).then save
 
-    # Send base64 to imgur
-    if @base64?
-      promises.push imgurService.postBase64(@base64).then save
+    if @data.url?
+      promises.push imgurService.postUrl(@data.url).then save
+
+    if @data.paste?
+      promises.push imgurService.postBase64(@data.paste).then save
+
+    if @data.youtube?
+      promises.push @saveVideo @data.youtube
 
     $q.all(promises)
       .then (results) =>

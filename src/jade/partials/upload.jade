@@ -1,37 +1,39 @@
-.aside.upload-aside
-  .aside-dialog
-    .aside-content(ng-file-drop='onFileSelect($files)', ng-file-paste='onFilePaste($files)')
-      .aside-header
+.modal.upload-modal
+  .modal-dialog
+    .modal-content(ng-file-drop='onFileDrop($files)', ng-file-paste='onFilePaste($files)')
+      .modal-header
         button.close(type='button', aria-hidden='true', ng-click='close()') ×
-        h4.aside-title
+        h4.modal-title
           span.glyphicon.glyphicon-cloud-upload.upload-icon
 
       form(role='form', ng-submit='submit()')
-        .aside-body
-            .alert.alert-danger(ng-show='error')
-              | {{ error }}
+        .modal-body
+          .alert.alert-danger(ng-show='error')
+            | {{ error }}
 
-            .form-group(ng-if='filePreview || url')
-              label File preview
+          .form-group(ng-if='data.drop')
+            .upload-label {{ data.drop.name }}
+            .upload-preview(ng-style='{ "background-image": "url(" + preview.drop + ")" }', ng-if='preview.drop')
 
-              div(ng-if='filePreview')
-                img.img-thumbnail(ng-src='{{ filePreview }}')
+          .form-group(ng-if='data.paste')
+            .upload-label Pasted image
+            .upload-preview(ng-style='{ "background-image": "url(" + preview.paste + ")" }', ng-if='preview.paste')
 
-              div(ng-if='url && !isYoutubeUrl(url)')
-                img.img-thumbnail(ng-src='{{ url }}')
+          .form-group
+            label.file-input.btn.btn-primary(for='file')
+              | Select file
+              input#file(type='file', ng-file-select='onFileSelect($files)')
+            .upload-preview(ng-style='{ "background-image": "url(" + preview.file + ")" }', ng-if='preview.file')
 
-              div(ng-if='url && isYoutubeUrl(url)')
-                img.img-thumbnail(ng-src='{{ youtubeThumbnail(url) }}')
+          .form-group
+            input.form-control(type='text', ng-change='urlChange()', ng-model='data.url', placeholder='Insert image URL')
+            .upload-preview(ng-style='{ "background-image": "url(" + preview.url + ")" }', ng-if='preview.url')
 
-            .form-group
-              label(for='file') Select file
-              input#file.form-control(type='file', ng-file-select='onFileSelect($files)')
+          .form-group
+            input.form-control(type='text', ng-change='youtubeChange()', ng-model='data.youtube', placeholder='Insert Youtube URL')
+            .upload-preview(ng-style='{ "background-image": "url(" + preview.youtube + ")" }', ng-if='preview.youtube')
 
-            .form-group
-              label(for='url') Insert URL
-              input#url.form-control(type='text', ng-model='url')
-
-          .aside-footer
-            button.btn.btn-primary(type='submit')
-              span(ng-hide='submitting') Submit
-              span(ng-show='submitting') Submitting...
+        .modal-footer
+          button.btn.btn-primary(type='submit')
+            span(ng-hide='submitting') Submit
+            span(ng-show='submitting') Submitting...

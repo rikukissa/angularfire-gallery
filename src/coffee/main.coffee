@@ -58,6 +58,10 @@ module.config ($routeProvider, $locationProvider, $modalProvider) ->
       templateUrl: 'main/index.html'
       controller: 'indexController'
 
+    .when '/upload',
+      templateUrl: 'main/index.html'
+      controller: 'indexController'
+
     .when '/files/:id',
       templateUrl: 'file/index.html'
       controller: 'filesController'

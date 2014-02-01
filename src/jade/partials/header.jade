@@ -1,7 +1,12 @@
 nav.header
   ul.header-section
+    li.header-button.header-icon-button
+      a(href='/')
+        i.glyphicon.glyphicon-home
+
+  ul.header-section
     li.header-button(ng-controller='uploadController', bs-modal='modal', data-template='upload.html', data-animation='am-fade-and-scale', data-placement='center')
-      | Upload
+      i.glyphicon.glyphicon-cloud-upload
 
   ul.header-section.header-section-right
     li.header-button.header-button-profile(bs-dropdown='dropdown', data-placement='bottom-right', data-animation='animation-flipX', container='body')

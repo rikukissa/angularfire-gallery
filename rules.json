@@ -32,7 +32,7 @@
               ".validate": "newData.isString() && ((newData.parent().child('service').val() === 'youtube' && newData.val().contains('youtube.com')) || (newData.parent().child('service').val() === 'imgur' && newData.val().contains('imgur.com')))"
             },
             "timestamp": {
-              ".validate": "newData.val() === now"
+              ".validate": "newData.val() <= now"
             }
           }
         },

@@ -6,4 +6,4 @@ module.exports = ($scope, $rootScope, $location, $firebase, fileService, youtube
   $scope.youtubeId = youtubeService.youtubeId
   $scope.isYoutubeUrl = youtubeService.isYoutubeUrl
 
-  $scope.files = $firebase fileService.files.limit(50)
+  $scope.files = $firebase fileService.files.limit 100

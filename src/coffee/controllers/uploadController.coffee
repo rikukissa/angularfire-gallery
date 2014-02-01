@@ -75,8 +75,11 @@ module.exports = ($scope, $q, $location, $routeParams, userService, imgurService
     deferred = $q.defer()
 
     ref = fileService.files.push model, (err) ->
-      deferred.reject err if err?
-      deferred.resolve ref
+      return deferred.reject err if err?
+
+      ref.setPriority Firebase.ServerValue.TIMESTAMP, (err) ->
+        return deferred.reject err if err?
+        deferred.resolve ref
 
     deferred.promise
 

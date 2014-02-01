@@ -1,12 +1,9 @@
-module.exports = ($scope, $firebase, $rootScope, userService, fileService, youtubeService, $timeout) ->
+module.exports = ($scope, $rootScope, $location, $firebase, fileService, youtubeService, user) ->
+  $scope.user = user
+  $scope.log = ->
+    $location.path 'files/-JEbrsIsDDMC-EbdSxKo'
+
   $scope.youtubeId = youtubeService.youtubeId
   $scope.isYoutubeUrl = youtubeService.isYoutubeUrl
 
-  $scope.files = $firebase fileService.files if userService.user?
-
-  $rootScope.$on '$firebaseSimpleLogin:login', ->
-    $scope.files = $firebase fileService.files.limit(50)
-
-  $rootScope.$on '$firebaseSimpleLogin:logout', ->
-    $scope.files = null
-
+  $scope.files = $firebase fileService.files.limit(50)

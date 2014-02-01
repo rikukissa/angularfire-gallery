@@ -3,19 +3,19 @@
         ".read": false,
         ".write": false,
         "users": {
-          ".read": true,
-          ".write": "!data.exists()",
+          ".write": "auth != null",
+          ".read": "auth != null && root.child('accepted_users').child(auth.id).exists()",
           "$userId": {
-            ".write": "auth != null && auth.id == $userId",
-            ".validate": "newData.hasChildren(['email', 'username'])",
+            ".write": "auth != null && !data.exists()",
+            ".validate": "newData.hasChildren(['email', 'username']) && $userId === auth.id",
             "username": {
               ".validate": "newData.isString() && newData.val().length >= 4"
             }
           }
         },
         "files": {
-          ".write": "auth != null && !data.exists()",
-          ".read": "auth != null",
+          ".write": "auth != null && root.child('accepted_users').child(auth.id).exists()",
+          ".read": "auth != null && root.child('accepted_users').child(auth.id).exists()",
           "$fileId": {
             ".write": "auth != null && (!data.exists() || auth.id == data.child('user_id').val())",
             ".validate": "newData.hasChildren(['user_id', 'link', 'file_type', 'timestamp', 'thumbnail', 'service']) && auth.id == newData.child('user_id').val()",
@@ -37,6 +37,10 @@
           }
         },
         "admin_users": {
+          ".write": "auth != null && data.child(auth.id).exists()"
+        },
+        "accepted_users": {
+          ".read": "auth != null && data.child(auth.id).exists()",
           ".write": "auth != null && data.child(auth.id).exists()"
         }
     }

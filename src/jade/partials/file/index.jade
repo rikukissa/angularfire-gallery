@@ -1,3 +1,4 @@
+div(header)
 div(ng-repeat='item in files')
   a(target='_blank', ng-href='{{ item.file.link }}', ng-if='item.file.file_type === "image"')
     img.file-view.img-responsive(ng-src='{{ item.file.link }}')
@@ -10,9 +11,9 @@ div(ng-repeat='item in files')
       img(gravatar-src='item.user.email', gravatar-size='36')
       | {{ item.user.username }}
 
-    .btn-toolbar.file-tools(ng-show='auth.user.id == item.file.user_id')
+    .btn-toolbar.file-tools(ng-show='user.id == item.file.user_id')
       .btn-group
-        button.btn.btn-danger(ng-click='delete()')
+        button.btn.btn-danger(ng-click='delete(item)')
           span.glyphicon.glyphicon-remove-circle
           |  delete
 

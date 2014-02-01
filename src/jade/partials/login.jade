@@ -2,12 +2,16 @@
   .modal-dialog
     .modal-content
       .modal-header
-        button.close(type='button', aria-hidden='true', ng-click='close()') ×
         h4.modal-title Login
+        | No account?&nbsp;
+        a(href='#/signup') Sign up
 
       form(role='form', ng-submit='login()')
         .alert.alert-danger(ng-show='loginError && loginError == "INVALID_USER"') Invalid user
+        .alert.alert-danger(ng-show='loginError && loginError == "INVALID_USER"') Invalid user
         .alert.alert-danger(ng-show='loginError && loginError == "INVALID_PASSWORD"') Invalid password
+        .alert.alert-danger(ng-show='loginError && loginError == "USER_NOT_FOUND"') Account not found
+        .alert.alert-info(ng-show='loginError && loginError == "USER_NOT_ACCEPTED"') Your account is waiting for approval
 
         .modal-body
           .form-group

@@ -4,25 +4,6 @@ html
     title Time to CC
     link(rel='stylesheet', type='text/css', href='css/style.css')
 
-  body(ng-app='app')
-    nav.header(ng-controller='headerController')
-      ul.header-section
-        li.header-button(ng-show='user', ng-controller='uploadController', bs-modal='modal', data-template='upload.html', data-animation='animation-slide-left', data-placement='center')
-          | Upload
-
-      ul.header-section.header-section-right(ng-show='user')
-        li.header-button.header-button-profile(bs-dropdown='dropdown', data-placement='bottom-right' data-animation='animation-flipX')
-          img.header-avatar(gravatar-src='user.email', gravatar-size='36')
-          span {{ user.username | capitalize }}
-
-      ul.header-section.header-section-right(ng-hide='user')
-        li.header-button(ng-controller='loginController', bs-modal='modal', data-template='login.html', data-animation='animation-fadeAndScale', data-placement='center')
-          | Log in
-
-        li.header-button(ng-controller='signupController', bs-modal='modal', data-template='signup.html', data-animation='animation-fadeAndScale', data-placement='center')
-          | Sign up
-
-
-
+  body(ng-app='app', check-auth)
     .view(ng-view)
     script(src='js/bundle.js')

@@ -1,13 +1,23 @@
-module.exports = ($scope, userService) ->
+module.exports = ($scope, $modal, $location, userService) ->
+  modal = $modal
+    scope: $scope
+    template: 'signup.html'
+    placement: 'center'
+    animation: 'animation-fadeAndScale'
+    backdrop: 'static'
+    container: 'body'
+    keyboard: false
+
   $scope.auth = userService.auth
-  $scope.username =
+  $scope.username = null
   $scope.email = null
   $scope.password = null
   $scope.signingUp = false
 
   $scope.close = ->
     @email = @password = @username = null
-    @$hide()
+    $location.path '/login'
+    modal.destroy()
 
   $scope.signup = ->
     @signingUp = true
@@ -18,6 +28,7 @@ module.exports = ($scope, userService) ->
       username: @username
     .then =>
       @signingUp = false
-      @close()
+      modal.destroy()
+      $location.path '/login'
     , (err) =>
       console.log arguments

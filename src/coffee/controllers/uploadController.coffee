@@ -1,7 +1,7 @@
 _ = require 'underscore'
 Firebase = require 'firebase'
 
-module.exports = ($scope, $q, $location, $routeParams, userService, imgurService, fileService, $firebase, youtubeService) ->
+module.exports = ($scope, $q, $location, $routeParams, userService, imgurService, fileService, $firebase, youtubeService, $timeout) ->
   $scope.auth = userService.auth
 
   if $location.$$path is '/upload'
@@ -131,9 +131,11 @@ module.exports = ($scope, $q, $location, $routeParams, userService, imgurService
     $q.all(promises)
       .then (results) =>
         @submitting = false
-        $location.path '/files/' + _.map(results, (result) ->
-          result.name()
-        ).join ','
+
+        $timeout ->
+          $location.path '/files/' + _.map(results, (result) ->
+            result.name()
+          ).join ','
 
         @close()
 

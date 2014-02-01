@@ -1,27 +1,45 @@
 _ = require 'underscore'
-config = require '../config.coffee'
 
-module.exports = (FirebaseService, $firebaseSimpleLogin, $rootScope) ->
+module.exports = ($rootScope, $q, $firebaseSimpleLogin, FirebaseService) ->
 
-  usersRef = new Firebase config.firebase.address + 'users'
+  users: FirebaseService.child('users')
 
-  service =
-    user: null
-    users: usersRef
-    auth: $firebaseSimpleLogin FirebaseService
-    create: (userData) ->
-      @auth
-        .$createUser(userData.email, userData.password)
+  auth: $firebaseSimpleLogin FirebaseService
 
-        .then (user) =>
-          @users.child(user.id).set _.omit(userData, 'password')
-        , (err) ->
-          throw err
+  authenticate: (email, password) ->
+    @auth.$login 'password',
+      email: email
+      password: password
+    .then (user) =>
+      @getUser()
 
-  $rootScope.$on '$firebaseSimpleLogin:login', ->
-    service.user = service.users.child service.auth.user.id
+  getUser: ->
+    @auth.$getCurrentUser().then (user) ->
+      deferred = $q.defer()
+      unless user?
+        err = new Error 'User not logged in'
+        err.code = 'NOT_LOGGED_IN'
+        deferred.reject err
+        return deferred.promise
 
-  $rootScope.$on '$firebaseSimpleLogin:logout', ->
-    service.user = null
+      userRef = FirebaseService.child('users').child user.id
 
-  service
+      userRef.on 'value', (snapshot) ->
+        deferred.resolve _.extend snapshot.val(), id: user.id
+
+      , -> # User is not accepted
+        err = new Error 'User not accepted'
+        err.code = 'USER_NOT_ACCEPTED'
+        deferred.reject err
+
+      deferred.promise
+
+  create: (userData) ->
+    @auth
+      .$createUser(userData.email, userData.password)
+
+      .then (user) =>
+        @users.child(user.id).set _.omit(userData, 'password')
+      , (err) ->
+        throw err
+

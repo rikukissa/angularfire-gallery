@@ -1,10 +1,10 @@
 _ = require 'underscore'
 
-module.exports = ($scope, $routeParams, userService, fileService, $firebase, $location) ->
-  $scope.auth = userService.auth
+module.exports = ($scope, $routeParams, userService, fileService, $firebase, $location, user) ->
+  $scope.user = user
 
-  $scope.delete = ->
-    @file.$remove().then () ->
+  $scope.delete = (item) ->
+    item.file.$remove().then () ->
       $location.path '/'
 
   fileIds = $routeParams.id.split(',')

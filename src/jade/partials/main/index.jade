@@ -1,4 +1,5 @@
-.file-thumbnails
-  a(ng-href='#/files/{{ key }}', ng-repeat='(key, file) in files | orderByPriority | orderBy: "-$id"')
-    img.file-thumbnail.img-thumbnail(ng-src='{{ file.thumbnail }}')
+div(header)
 
+.file-thumbnails
+  a(ng-href='#/files/{{ file.$id }}', ng-repeat='(key, file) in files | orderByPriority | orderBy: "-$id"')
+    img.file-thumbnail.img-thumbnail(ng-src='{{ file.thumbnail }}')

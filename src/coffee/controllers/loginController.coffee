@@ -1,5 +1,12 @@
-module.exports = ($scope, userService) ->
-  $scope.auth = userService.auth
+module.exports = ($scope, $location, $modal, userService) ->
+  modal = $modal
+    scope: $scope
+    template: 'login.html'
+    placement: 'center'
+    animation: 'animation-fadeAndScale'
+    backdrop: 'static'
+    container: 'body'
+    keyboard: false
 
   $scope.loggingIn = false
   $scope.loginVisible = true
@@ -8,21 +15,15 @@ module.exports = ($scope, userService) ->
   $scope.email = null
   $scope.password = null
 
-  $scope.close = ->
-    @email = @password = null
-    @$hide()
-
   $scope.login = ->
     @loginError = null
     @loggingIn = true
 
-    @auth.$login 'password',
-      email: @email
-      password: @password
-    .then (user) =>
-      @loggingIn = false
-      @close()
-
+    userService.authenticate(@email, @password).then (user) =>
+      $location.path '/'
     , (err) =>
       @loggingIn = false
       @loginError = err.code
+
+  $scope.$on '$destroy', ->
+    modal.destroy()

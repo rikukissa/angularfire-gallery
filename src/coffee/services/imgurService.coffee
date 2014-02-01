@@ -46,4 +46,6 @@ module.exports = ($http, $upload, $q) ->
     ).then (response) ->
       response.data.data
     , (response) ->
+      if response.status is 404
+        return throw new Error 'Upload failed'
       throw new Error response.data.data.error

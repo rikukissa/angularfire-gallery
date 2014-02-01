@@ -1,0 +1,9 @@
+nav.header
+  ul.header-section
+    li.header-button(ng-controller='uploadController', bs-modal='modal', data-template='upload.html', data-animation='am-fade-and-scale', data-placement='center')
+      | Upload
+
+  ul.header-section.header-section-right
+    li.header-button.header-button-profile(bs-dropdown='dropdown', data-placement='bottom-right', data-animation='animation-flipX', container='body')
+      img.header-avatar(gravatar-src='user.email', gravatar-size='36')
+      span {{ user.username | capitalize }}

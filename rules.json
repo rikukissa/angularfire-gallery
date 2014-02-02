@@ -18,6 +18,7 @@
           ".read": "auth != null && root.child('accepted_users').child(auth.id).exists()",
           "$fileId": {
             ".write": "auth != null && (!data.exists() || auth.id == data.child('user_id').val())",
+            ".read": "root.child('public_files').child($fileId).exists()",
             ".validate": "newData.hasChildren(['user_id', 'link', 'file_type', 'timestamp', 'thumbnail', 'service']) && auth.id == newData.child('user_id').val()",
             "file_type": {
               ".validate": "newData.val() === 'video' || newData.val() === 'image'"
@@ -38,6 +39,10 @@
         },
         "admin_users": {
           ".write": "auth != null && data.child(auth.id).exists()"
+        },
+        "public_files": {
+          ".write": "auth != null && data.child(auth.id).exists()",
+          ".read": true
         },
         "accepted_users": {
           ".read": "auth != null && data.child(auth.id).exists()",

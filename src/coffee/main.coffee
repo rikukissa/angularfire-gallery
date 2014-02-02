@@ -46,12 +46,10 @@ module.directive 'header', require './directives/header.coffee'
 module.service 'userService', require './services/userService.coffee'
 module.service 'imgurService', require './services/imgurService.coffee'
 module.service 'youtubeService', require './services/youtubeService.coffee'
+module.service 'fileService', require './services/fileService.coffee'
 
 module.service 'FirebaseService', ->
   new Firebase config.firebase.address
-
-module.service 'fileService', (FirebaseService) ->
-  files: FirebaseService.child('files')
 
 module.filter 'capitalize', () -> _.str.capitalize
 

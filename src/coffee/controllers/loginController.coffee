@@ -1,4 +1,12 @@
-module.exports = ($scope, $location, $modal, userService) ->
+_ = require 'underscore'
+
+module.exports = ($scope, $location, $modal, userService, fileService) ->
+  # Load background image from public files
+  fileService.getPublicFiles().then (files) ->
+    return if files.length is 0
+    $scope.previewSrc = _.sample(files).link
+
+  # Login modal
   modal = $modal
     scope: $scope
     template: 'login.html'

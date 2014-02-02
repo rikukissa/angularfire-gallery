@@ -9,7 +9,7 @@ div(ng-repeat='item in files')
   .file-header
     h2
       img(gravatar-src='item.user.email', gravatar-size='36')
-      | {{ item.user.username }}
+      | {{ item.user.username }}
 
     .btn-toolbar.file-tools(ng-show='user.id == item.file.user_id')
       .btn-group

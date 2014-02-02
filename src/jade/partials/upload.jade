@@ -21,7 +21,7 @@
 
           .form-group
             label.file-input.btn.btn-primary(for='file')
-              | Select file
+              | Select file
               input#file(type='file', ng-file-select='onFileSelect($files)')
             .upload-preview(ng-style='{ "background-image": "url(" + preview.file + ")" }', ng-if='preview.file')
 

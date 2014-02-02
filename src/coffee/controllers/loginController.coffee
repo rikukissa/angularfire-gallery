@@ -26,4 +26,5 @@ module.exports = ($scope, $location, $modal, userService) ->
       @loginError = err.code
 
   $scope.$on '$destroy', ->
+    modal.hide()
     modal.destroy()

@@ -1,3 +1,4 @@
+$           = require 'jQuery'
 _           = require 'underscore'
 _.str       = require 'underscore.string'
 path        = require 'path'
@@ -7,13 +8,14 @@ ngRoute     = require 'angular-route'
 md5         = require 'angular-md5'
 animate     = require 'angular-animate'
 gravatar    = require 'angular-gravatar'
+ngInfScrl   = require 'angular-infinite-scroll'
 bootstrap   = require 'angular-strap'
 templates   = require 'angular-strap-templates'
 Firebase    = require 'firebase'
 angularfire = require 'angularfire'
 SimpleLogin = require 'firebase-simple-login'
 ngFileUpload = require 'ng-file-upload'
-
+ngProgress  = require 'ng-progress'
 partials    = require './partials'
 
 module = angular.module 'app', [
@@ -21,8 +23,10 @@ module = angular.module 'app', [
   'ngAnimate'
   'firebase'
   'partials'
+  'ngProgress'
   'ui.gravatar'
   'angularFileUpload'
+  'infinite-scroll'
   'mgcrea.ngStrap.modal'
   'mgcrea.ngStrap.aside'
   'mgcrea.ngStrap.tooltip'
@@ -59,6 +63,13 @@ module.config ($routeProvider, $locationProvider, $modalProvider) ->
 
   $routeProvider
     .when '/',
+      templateUrl: 'main/index.html'
+      controller: 'indexController'
+      reloadOnSearch: false
+      resolve:
+        user: (userService) -> userService.getUser()
+
+    .when '/s/:priority',
       templateUrl: 'main/index.html'
       controller: 'indexController'
       resolve:

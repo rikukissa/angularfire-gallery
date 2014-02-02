@@ -9,3 +9,7 @@
 
 ## Enable LiveReload
 Install [LiveReload for Chrome](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei?hl=en)
+
+
+## Notes
+  - jQuery should be removed from the package as soon as ngInfiniteScroll releases a version without jQuery dependency

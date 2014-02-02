@@ -46,6 +46,17 @@ compileCoffee = (debug = false) ->
         depends:
           'angular-md5': 'angular'
 
+      'jQuery':
+        path: './vendor/jquery/jquery.js'
+        exports: '$'
+
+      'angular-infinite-scroll':
+        path: './vendor/ngInfiniteScroll/ng-infinite-scroll.js'
+        exports: 'angular'
+        depends:
+          'jQuery': '$'
+          'angular': 'angular'
+
       'ng-file-upload':
         path: './vendor/ng-file-upload/angular-file-upload.js'
         exports: 'ngFileUpload'
@@ -56,6 +67,10 @@ compileCoffee = (debug = false) ->
 
       'angular-animate':
         path: './vendor/angular-animate/angular-animate.js'
+        exports: 'angular'
+
+      'ng-progress':
+        path: './vendor/ngprogress/build/ngProgress.js'
         exports: 'angular'
 
       'firebase':

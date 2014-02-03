@@ -97,10 +97,13 @@ module.exports = ($scope, $route, $q, $window, $routeParams, $location, userServ
 
       priority = lastFile.$priority
 
-      cachePromises[direction] = fileService.getNext(priority)
+      fetchFn = _.bind fileService.getNext, fileService
+      if direction is 'prev'
+        fetchFn = _.bind fileService.getPrevious, fileService
+
+      cachePromises[direction] = fetchFn(priority)
         .then (files) ->
           cache[direction] = cache[direction].concat files
-
           cachePromises[direction] = null
 
   handleKeys = (e) ->

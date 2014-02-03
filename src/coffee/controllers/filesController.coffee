@@ -6,12 +6,9 @@ module.exports = ($scope, $route, $q, $window, $routeParams, $location, userServ
   $scope.files = []
   $scope.user = user
 
-  console.log $scope.$on '$locationChangeStart', (e, next, current) ->
-    console.log e
-    console.log $routeParams.id
-    console.log next.substr 0, current.indexOf $routeParams.id
-    console.log current.substr 0, current.indexOf $routeParams.id
-    e.preventDefault()
+  lastRoute = $route.current
+  $scope.$on '$locationChangeSuccess', (e, next, current) ->
+    $route.current = lastRoute if next.indexOf('/files/') > 0
 
   cache =
     current: null
@@ -32,6 +29,10 @@ module.exports = ($scope, $route, $q, $window, $routeParams, $location, userServ
 
   addFile = (file) ->
     $scope.files.push file
+
+    $location.path 'files/' + _.map $scope.files, (file) ->
+      file.$name
+    .join ','
 
     userService.getUser(file.user_id).then (user) ->
       file.user = user

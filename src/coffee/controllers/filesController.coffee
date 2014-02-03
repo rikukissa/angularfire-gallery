@@ -1,10 +1,27 @@
-angular = require 'angular'
 _ = require 'underscore'
 async = require 'async'
+angular = require 'angular'
 
-module.exports = ($scope, $routeParams, userService, fileService, $firebase, $location, user, $window, ngProgress) ->
+module.exports = ($scope, $route, $q, $window, $routeParams, $location, userService, fileService, user, ngProgress) ->
   $scope.files = []
   $scope.user = user
+
+  console.log $scope.$on '$locationChangeStart', (e, next, current) ->
+    console.log e
+    console.log $routeParams.id
+    console.log next.substr 0, current.indexOf $routeParams.id
+    console.log current.substr 0, current.indexOf $routeParams.id
+    e.preventDefault()
+
+  cache =
+    current: null
+    prev: []
+    next: []
+
+  cachePromises =
+    init: null
+    next: null
+    prev: null
 
   $scope.delete = (file) ->
     fileService
@@ -12,6 +29,12 @@ module.exports = ($scope, $routeParams, userService, fileService, $firebase, $lo
       .then ->
         return $window.history.back() if $window.history > 1
         $location.path '/'
+
+  addFile = (file) ->
+    $scope.files.push file
+
+    userService.getUser(file.user_id).then (user) ->
+      file.user = user
 
   ngProgress.start()
 
@@ -21,7 +44,7 @@ module.exports = ($scope, $routeParams, userService, fileService, $firebase, $lo
   async.map fileIds, (id, callback) ->
 
     fileService.getFile(id).then (file) ->
-      $scope.files.push file
+      addFile file
       callback null, file
     , ->
       callback null
@@ -30,27 +53,62 @@ module.exports = ($scope, $routeParams, userService, fileService, $firebase, $lo
     ngProgress.complete()
 
     results = _.filter results, _.identity
-    $location.path '/404' if results.length is 0
 
+    return $location.path '/404' if results.length is 0
 
-  # Browsing
-  getFile = (currentFile, methodName) ->
-    query = fileService.files[methodName](currentFile.$priority).limit 2
-    query.once 'value', (snapshot) ->
-      nextFile = _.omit snapshot.val(), currentFile.$name
-      keys = _.keys(nextFile)
-      return if keys.length is 0
+    cachePromises.init = initializeCache()
 
-      $scope.$apply ->
-        $location.path '/files/' + _.first(keys)
+  # Loads next & previous files to cache
+  initializeCache = ->
+    cache.current = _.last($scope.files)
+
+    priority = cache.current.$priority
+
+    next = fileService.getNext priority
+    prev = fileService.getPrevious priority
+
+    $q.all([prev, next]).then ([prev, next]) ->
+      cache.next = next
+      cache.prev = prev
+
+  moveToFile = (direction) ->
+    cachePromises.init.then ->
+      return if cache[direction].length is 0
+
+      # Push current file to previous files
+      prevDirection = if direction is 'next' then 'prev' else 'next'
+
+      cache[prevDirection].unshift cache.current
+
+      # Set next file to be the current file
+      cache.current = cache[direction].shift()
+
+      $scope.files = []
+
+      addFile cache.current
+
+      return if cachePromises[direction]? or cache[direction].length >= 5
+
+      # Start fetching for next 5 files
+      lastFile = _.last(cache[direction])
+
+      return unless lastFile?
+
+      priority = lastFile.$priority
+
+      cachePromises[direction] = fileService.getNext(priority)
+        .then (files) ->
+          cache[direction] = cache[direction].concat files
+
+          cachePromises[direction] = null
 
   handleKeys = (e) ->
-    currentFile = _.last $scope.files
-    return unless e.keyCode in [37, 39] and currentFile?
+    return unless e.keyCode in [37, 39] and cachePromises.init?
+
     e.preventDefault()
 
-    getFile(currentFile, 'endAt') if e.keyCode is 39
-    getFile(currentFile, 'startAt') if e.keyCode is 37
+    moveToFile('next') if e.keyCode is 39
+    moveToFile('prev') if e.keyCode is 37
 
   angular.element($window).on 'keydown', handleKeys
 

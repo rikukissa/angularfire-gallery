@@ -6,14 +6,25 @@ module.exports = ($rootScope, $q, $firebaseSimpleLogin, FirebaseService) ->
 
   auth: $firebaseSimpleLogin FirebaseService
 
+  getUser: (id) ->
+    deferred = $q.defer()
+
+    @users.child(id).once 'value', (snapshot) ->
+      user = snapshot.val()
+      unless user?
+        return deferred.reject new Error "User #{id} not found"
+      deferred.resolve user
+
+    deferred.promise
+
   authenticate: (email, password) ->
     @auth.$login 'password',
       email: email
       password: password
     .then (user) =>
-      @getUser()
+      @getCurrentUser()
 
-  getUser: ->
+  getCurrentUser: ->
     @auth.$getCurrentUser().then (user) ->
       deferred = $q.defer()
       unless user?

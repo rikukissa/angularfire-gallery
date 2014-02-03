@@ -1,8 +1,39 @@
 _ = require 'underscore'
 async = require 'async'
 
-module.exports = ($q, FirebaseService, userService) ->
+formatCollection = (snapshot, obj) ->
+  for key, value of obj
+    value.$name = key
+    value.$priority = snapshot.child(key).getPriority()
+
+module.exports = ($q, FirebaseService) ->
   files: FirebaseService.child('files')
+
+  getNext: (priority, limit = 5) ->
+    deferred = $q.defer()
+
+    limit += 1
+
+    @files.endAt(priority).limit(limit).once 'value', (snapshot) ->
+      files = snapshot.val()
+
+      formatCollection snapshot, files
+
+      deferred.resolve _.toArray(files).reverse().slice(1)
+
+    deferred.promise
+
+  getPrevious: (priority, limit = 5) ->
+    deferred = $q.defer()
+
+    limit += 1
+
+    @files.startAt(priority).limit(limit).once 'value', (snapshot) ->
+      files = snapshot.val()
+      formatCollection snapshot, files
+      deferred.resolve _.toArray(files).slice(1)
+
+    deferred.promise
 
   getFile: (id) ->
     deferred = $q.defer()
@@ -18,10 +49,7 @@ module.exports = ($q, FirebaseService, userService) ->
       file.$priority = snapshot.getPriority()
       file.$name = snapshot.name()
 
-      # Search for user
-      userService.users.child(file.user_id).once 'value', (snapshot) ->
-        file.user = snapshot.val()
-        deferred.resolve file
+      deferred.resolve file
 
     deferred.promise
 

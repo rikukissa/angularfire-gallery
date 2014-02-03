@@ -65,13 +65,13 @@ module.config ($routeProvider, $locationProvider, $modalProvider) ->
       controller: 'indexController'
       reloadOnSearch: false
       resolve:
-        user: (userService) -> userService.getUser()
+        user: (userService) -> userService.getCurrentUser()
 
     .when '/s/:priority',
       templateUrl: 'main/index.html'
       controller: 'indexController'
       resolve:
-        user: (userService) -> userService.getUser()
+        user: (userService) -> userService.getCurrentUser()
 
     .when '/login',
       templateUrl: 'login/index.html'
@@ -92,17 +92,17 @@ module.config ($routeProvider, $locationProvider, $modalProvider) ->
       templateUrl: 'main/index.html'
       controller: 'indexController'
       resolve:
-        user: (userService) -> userService.getUser()
+        user: (userService) -> userService.getCurrentUser()
 
     .when '/files/:id',
       templateUrl: 'file/index.html'
       controller: 'filesController'
       resolve:
-        user: (userService) -> userService.getUser()
+        user: (userService) -> userService.getCurrentUser()
 
     .when '/404',
       templateUrl: '404/index.html'
       controller: ($scope, user) ->
         $scope.user = user
       resolve:
-        user: (userService) -> userService.getUser()
+        user: (userService) -> userService.getCurrentUser()

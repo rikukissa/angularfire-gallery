@@ -99,3 +99,10 @@ module.config ($routeProvider, $locationProvider, $modalProvider) ->
       controller: 'filesController'
       resolve:
         user: (userService) -> userService.getUser()
+
+    .when '/404',
+      templateUrl: '404/index.html'
+      controller: ($scope, user) ->
+        $scope.user = user
+      resolve:
+        user: (userService) -> userService.getUser()

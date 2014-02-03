@@ -1,19 +1,19 @@
 div(header)
-div(ng-repeat='item in files')
-  a(target='_blank', ng-href='{{ item.file.link }}', ng-if='item.file.file_type === "image"')
-    img.file-view.img-responsive(ng-src='{{ item.file.link }}')
+div(ng-repeat='file in files')
+  a(target='_blank', ng-href='{{ file.link }}', ng-if='file.file_type === "image"')
+    img.file-view.img-responsive(ng-src='{{ file.link }}')
 
-  a(target='_blank', ng-href='{{ item.file.link }}', ng-if='item.file.file_type === "video"')
-    div(youtube-embed='{{ item.file.video }}')
+  a(target='_blank', ng-href='{{ file.link }}', ng-if='file.file_type === "video"')
+    div(youtube-embed='{{ file.video }}')
 
   .file-header
     h2
-      img(gravatar-src='item.user.email', gravatar-size='36')
-      | {{ item.user.username }}
+      img(gravatar-src='file.user.email', gravatar-size='36')
+      | {{ file.user.username }}
 
-    .btn-toolbar.file-tools(ng-show='user.id == item.file.user_id')
+    .btn-toolbar.file-tools(ng-show='user.id == file.user_id')
       .btn-group
-        button.btn.btn-danger(ng-click='delete(item)')
+        button.btn.btn-danger(ng-click='delete(file)')
           span.glyphicon.glyphicon-remove-circle
           |  delete
 

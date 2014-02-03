@@ -1,39 +1,42 @@
 angular = require 'angular'
 _ = require 'underscore'
+async = require 'async'
 
 module.exports = ($scope, $routeParams, userService, fileService, $firebase, $location, user, $window, ngProgress) ->
+  $scope.files = []
   $scope.user = user
 
-  $scope.delete = (item) ->
-    item.file.$remove().then () ->
-      $location.path '/'
+  $scope.delete = (file) ->
+    fileService
+      .removeFile(file.$name)
+      .then ->
+        return $window.history.back() if $window.history > 1
+        $location.path '/'
 
   ngProgress.start()
 
   fileIds = $routeParams.id.split(',')
 
-  $scope.files = []
+  # Load files
+  async.map fileIds, (id, callback) ->
 
-  _.each fileIds, (fileId) ->
+    fileService.getFile(id).then (file) ->
+      $scope.files.push file
+      callback null, file
+    , ->
+      callback null
 
-    fileQuery = fileService.files.child fileId
+  , (err, results) ->
+    ngProgress.complete()
 
-    fileQuery.on 'value', (snapshot) ->
-      fileObj = {}
-      $scope.files.push fileObj
+    results = _.filter results, _.identity
+    $location.path '/404' if results.length is 0
 
-      if fileIds.length is $scope.files.length
-        ngProgress.complete()
 
-      fileObj.$priority = snapshot.getPriority()
-      fileObj.$name = snapshot.name()
-
-      fileObj.file = snapshot.val()
-      fileObj.user = $firebase userService.users.child fileObj.file.user_id
-
+  # Browsing
   getFile = (currentFile, methodName) ->
     query = fileService.files[methodName](currentFile.$priority).limit 2
-    query.on 'value', (snapshot) ->
+    query.once 'value', (snapshot) ->
       nextFile = _.omit snapshot.val(), currentFile.$name
       keys = _.keys(nextFile)
       return if keys.length is 0
@@ -43,7 +46,7 @@ module.exports = ($scope, $routeParams, userService, fileService, $firebase, $lo
 
   handleKeys = (e) ->
     currentFile = _.last $scope.files
-    return unless e.keyCode in [37, 39] and currentFile.file?
+    return unless e.keyCode in [37, 39] and currentFile?
     e.preventDefault()
 
     getFile(currentFile, 'endAt') if e.keyCode is 39

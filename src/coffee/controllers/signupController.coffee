@@ -1,4 +1,5 @@
 _ = require 'underscore'
+
 module.exports = ($scope, $modal, $location, userService, fileService) ->
 
   # Load background image from public files

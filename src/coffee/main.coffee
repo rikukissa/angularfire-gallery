@@ -63,11 +63,10 @@ module.config ($routeProvider, $locationProvider, $modalProvider) ->
     .when '/',
       templateUrl: 'main/index.html'
       controller: 'indexController'
-      reloadOnSearch: false
       resolve:
         user: (userService) -> userService.getCurrentUser()
 
-    .when '/s/:priority',
+    .when '/p/:priority',
       templateUrl: 'main/index.html'
       controller: 'indexController'
       resolve:

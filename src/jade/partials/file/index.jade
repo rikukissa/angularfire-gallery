@@ -15,13 +15,13 @@ div(ng-repeat='file in files')
       .btn-group
         button.btn.btn-primary(ng-click='addFavourite(file)', ng-hide='user.favourites[file.$name]')
           span.glyphicon.glyphicon-heart
-          span Favourite
+          span favourite
 
         button.btn.btn-primary(ng-click='unFavourite(file)', ng-show='user.favourites[file.$name]')
           span.glyphicon.glyphicon-heart-empty
-          span Unfavourite
+          span unfavourite
 
-      .btn-group(ng-show='user.$name == file.user_id')
+      .btn-group(ng-show='user.$name == file.user_id || user.admin')
         button.btn.btn-danger(ng-click='delete(file)')
           span.glyphicon.glyphicon-remove-circle
           span delete

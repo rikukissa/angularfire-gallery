@@ -33,13 +33,19 @@ body, html
 .view
   height 100%
 
+.avatar
+  width 30px
+  heigth 30px
+  border-radius 18px
+
 headerHeight = 60px
 
 .header
   height headerHeight
   background #5cb85c
   border-bottom 1px solid #47A447
-
+  position relative
+  z-index 2
   .header-section
     list-style none
     margin-bottom 0
@@ -62,11 +68,8 @@ headerHeight = 60px
       background #47a447
       text-shadow 1px -1px 0px rgba(0, 0, 0, 0.1)
 
-  .header-avatar
+  .avatar
     margin-right 1em
-    width 30px
-    heigth 30px
-    border-radius 18px
 
   .glyphicon
     font-size 1.2em
@@ -198,3 +201,45 @@ headerHeight = 60px
   font-weight 300
   font-size 14px
   text-decoration none
+
+.sidebar
+  width 200px
+  height 100%
+  padding-top headerHeight
+  position fixed
+  top 0
+  left 0
+  background #eee
+
+.sidebar-divider
+  border-top 1px solid #ccc
+
+.sidebar-menu
+  list-style none
+  padding 0
+  margin 0
+  background #ddd
+  li
+    padding .7em 1.5em
+    cursor pointer
+    color #666
+    &:hover
+      background #ccc
+// Profile
+.content-profile
+  padding 20px
+  padding-left 220px
+
+.profile-box
+  text-align center
+  padding 2em 0
+  margin-top 1em
+  .avatar
+    width 86px
+    height 86px
+    border-radius 64px
+  .username
+    font-weight 300
+    font-size 1.5em
+    text-shadow 1px 1px 0 #fff
+    color #666

@@ -18,7 +18,14 @@ ngFileUpload = require 'ng-file-upload'
 ngProgress  = require 'ng-progress'
 partials    = require './partials'
 
+# Modules
+profile = require './modules/profile.coffee'
+
+
+
 module = angular.module 'app', [
+  'tt.profile'
+
   'ngRoute'
   'ngAnimate'
   'firebase'
@@ -57,7 +64,7 @@ module.run ($rootScope, $location) ->
   $rootScope.$on '$routeChangeError', ->
     $location.path '/login'
 
-module.config ($routeProvider, $locationProvider, $modalProvider) ->
+module.config ($routeProvider, $locationProvider) ->
 
   $routeProvider
     .when '/',
@@ -87,12 +94,6 @@ module.config ($routeProvider, $locationProvider, $modalProvider) ->
         logout: (userService) ->
           userService.auth.$logout()
 
-    .when '/upload',
-      templateUrl: 'main/index.html'
-      controller: 'indexController'
-      resolve:
-        user: (userService) -> userService.getCurrentUser()
-
     .when '/files/:id',
       templateUrl: 'file/index.html'
       controller: 'filesController'
@@ -105,3 +106,6 @@ module.config ($routeProvider, $locationProvider, $modalProvider) ->
         $scope.user = user
       resolve:
         user: (userService) -> userService.getCurrentUser()
+
+    .otherwise
+      redirectTo: '/404'

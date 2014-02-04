@@ -8,7 +8,7 @@ module.exports = ($scope, $route, $q, $window, $routeParams, $location, userServ
 
   lastRoute = $route.current
   $scope.$on '$locationChangeSuccess', (e, next, current) ->
-    $route.current = lastRoute if next.indexOf('/files/') > 0
+    $route.current = lastRoute if next.indexOf('/files/') > -1
 
   cache =
     current: null

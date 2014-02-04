@@ -8,6 +8,7 @@ module.exports = ($rootScope, $q, $firebaseSimpleLogin, FirebaseService) ->
       @$name = @$snapshot.name()
       @[key] = value for key, value of $snapshot.val()
       @favourites ?= {}
+
     $save: ->
       deferred = $q.defer()
 
@@ -54,7 +55,7 @@ module.exports = ($rootScope, $q, $firebaseSimpleLogin, FirebaseService) ->
 
       userRef = FirebaseService.child('users').child user.id
 
-      userRef.on 'value', (snapshot) ->
+      userRef.once 'value', (snapshot) ->
         deferred.resolve new User snapshot
       , -> # User is not accepted
         err = new Error 'User not accepted'

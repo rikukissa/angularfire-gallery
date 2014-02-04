@@ -1,0 +1,8 @@
+div(header)
+div(sidebar)
+
+.content.content-profile
+  h2 Favourites
+  .file-thumbnails
+    a(ng-href='#/files/{{ file.$name }}', ng-repeat='file in files')
+      img.file-thumbnail.img-thumbnail(ng-src='{{ file.thumbnail }}')

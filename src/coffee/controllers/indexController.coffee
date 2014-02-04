@@ -35,8 +35,8 @@ module.exports = ($timeout, $route, $scope, $rootScope, $location, $firebase, fi
 
     ngProgress.complete()
 
-  # Load more files on acroll
-  $scope.loadMore = ->
+
+  loadMore = ->
 
     # Empty cache files to view
     if fileCache.length > 0
@@ -69,3 +69,6 @@ module.exports = ($timeout, $route, $scope, $rootScope, $location, $firebase, fi
 
       # if $scope.files.length > 200
       #   $scope.files.splice 0, 50
+
+  # Load more files on acroll
+  $scope.loadMore = _.throttle loadMore, 2000

@@ -9,34 +9,19 @@ module.exports = ($timeout, $route, $scope, $rootScope, $location, $firebase, fi
 
   loadingFiles = true
 
-  orderFiles = (query) ->
-    query = _.map query.$getIndex(), (index) ->
-      _.extend query[index],
-        $id: index
-
-    _.sortBy query, (file) ->
-      -file.timestamp
-
-  # Load initial files
-  query = fileService.files
-
   if $location.search()?.p?
-    query = query.endAt parseInt $location.search().p
+    promise = fileService.getNext parseInt($location.search().p), 150
+  else
+    promise = fileService.getNewFiles 150
 
-  query = query.limit 150
-
-  files = $firebase query
-
-  files.$on 'loaded', () ->
+  promise.then (files) ->
+    ngProgress.complete()
     loadingFiles = false
-    files = orderFiles files
+
     fileCache = files.splice -50
     $scope.files = files
 
-    ngProgress.complete()
-
-
-  loadMore = ->
+  $scope.loadMore = ->
 
     # Empty cache files to view
     if fileCache.length > 0
@@ -46,29 +31,16 @@ module.exports = ($timeout, $route, $scope, $rootScope, $location, $firebase, fi
 
     return if loadingFiles
 
+    ngProgress.reset()
+    ngProgress.start()
+
     loadingFiles = true
 
     lastPriority = _.last($scope.files).$priority
 
-    fileQuery = $firebase fileService.files.endAt(lastPriority).limit 50
-
-    ngProgress.reset()
-    ngProgress.start()
-
-    fileQuery.$on 'loaded', () ->
-      newFiles = orderFiles fileQuery
-
-      newFiles.shift()
+    fileService.getNext(lastPriority, 50).then (newFiles) ->
+      ngProgress.complete()
+      loadingFiles = false
 
       fileCache = newFiles.splice -25
-
       $scope.files = $scope.files.concat newFiles
-
-      loadingFiles = false
-      ngProgress.complete()
-
-      # if $scope.files.length > 200
-      #   $scope.files.splice 0, 50
-
-  # Load more files on acroll
-  $scope.loadMore = _.throttle loadMore, 2000

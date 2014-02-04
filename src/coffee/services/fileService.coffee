@@ -9,6 +9,18 @@ formatCollection = (snapshot, obj) ->
 module.exports = ($q, FirebaseService) ->
   files: FirebaseService.child('files')
 
+  getNewFiles: (limit = 100) ->
+    deferred = $q.defer()
+
+    limit += 1
+
+    @files.limit(limit).once 'value', (snapshot) ->
+      files = snapshot.val()
+      formatCollection snapshot, files
+      deferred.resolve _.toArray(files).reverse().slice(1)
+
+    deferred.promise
+
   getNext: (priority, limit = 5) ->
     deferred = $q.defer()
 

@@ -1,6 +1,25 @@
 _ = require 'underscore'
 
+
+
 module.exports = ($rootScope, $q, $firebaseSimpleLogin, FirebaseService) ->
+  class User
+    constructor: (@$snapshot) ->
+      @[key] = value for key, value of $snapshot.val()
+      @$name = @$snapshot.name()
+
+    $save: ->
+      deferred = $q.defer()
+
+      omittedKeys = ['$snapshot', '$name', '$save']
+
+      userData = _.omit @, omittedKeys
+
+      @$snapshot.ref().update userData, (err) ->
+        deferred.reject err if err?
+        deferred.resolve @
+
+      deferred.promise
 
   users: FirebaseService.child('users')
 
@@ -13,7 +32,7 @@ module.exports = ($rootScope, $q, $firebaseSimpleLogin, FirebaseService) ->
       user = snapshot.val()
       unless user?
         return deferred.reject new Error "User #{id} not found"
-      deferred.resolve user
+      deferred.resolve new User snapshot
 
     deferred.promise
 
@@ -36,8 +55,7 @@ module.exports = ($rootScope, $q, $firebaseSimpleLogin, FirebaseService) ->
       userRef = FirebaseService.child('users').child user.id
 
       userRef.on 'value', (snapshot) ->
-        deferred.resolve _.extend snapshot.val(), id: user.id
-
+        deferred.resolve new User snapshot
       , -> # User is not accepted
         err = new Error 'User not accepted'
         err.code = 'USER_NOT_ACCEPTED'

@@ -1,0 +1,36 @@
+div(header)
+div(sidebar)
+
+.content.content-profile
+  h2 User details
+  form(role='form', ng-submit='saveUser()')
+    .form-group
+      label(for='user-id-input') User ID
+      input#user-id-input.form-control(disabled, ng-model='user.$name')
+    .form-group
+      label(for='username-input') Username
+      input#username-input.form-control(placeholder='Enter username', ng-model='user.username')
+
+    .form-group
+      label(for='email-input') Email address
+      input#email-input.form-control(type='email', placeholder='Enter email', ng-model='user.email')
+
+    button.btn.btn-primary(type='submit', ng-class='{"btn-success": userSaved}')
+      span(ng-hide='userSaved') Save
+      span(ng-show='userSaved') Saved!
+
+  hr.divider
+
+  h2 Change password
+  form(role='form')
+    .form-group
+      label(for='password-input') Password
+      input#password-input.form-control(placeholder='Enter password', ng-model='data.password')
+
+    .form-group
+      label(for='password-confirm-input') Password
+      input#password-confirm-input.form-control(placeholder='Confirm password', ng-model='data.confirmPassword')
+
+    button.btn.btn-primary(type='submit') Save
+
+  hr.divider

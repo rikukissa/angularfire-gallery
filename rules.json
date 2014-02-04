@@ -10,6 +10,9 @@
             ".validate": "newData.hasChildren(['email', 'username']) && $userId === auth.id",
             "username": {
               ".validate": "newData.isString() && newData.val().length >= 4"
+            },
+            "admin": {
+              ".validate": "newData.isBoolean() && (newData.val() === false || root.child('admin_users').child(auth.id).exists())"
             }
           }
         },
@@ -46,7 +49,7 @@
         },
         "accepted_users": {
           ".read": "auth != null && data.child(auth.id).exists()",
-          ".write": "auth != null && data.child(auth.id).exists()"
+          ".write": "auth != null && data.child(auth.id).exists() && root.child('admin_users').child(auth.id).exists()"
         }
     }
 }

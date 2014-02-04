@@ -1,7 +1,7 @@
 module.exports = ($scope, $location, $rootScope, $firebase, $dropdown, userService) ->
 
   $scope.dropdown = [
-      'text': 'Settings'
+      'text': 'Profile'
       'href': '#/profile'
     ,
       'text': 'Log out'

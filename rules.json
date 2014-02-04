@@ -13,6 +13,11 @@
             },
             "admin": {
               ".validate": "newData.isBoolean() && (newData.val() === false || root.child('admin_users').child(auth.id).exists())"
+            },
+            "favourites": {
+              "$fileId": {
+                ".validate": "root.child('files').child($fileId).exists()"
+              }
             }
           }
         },

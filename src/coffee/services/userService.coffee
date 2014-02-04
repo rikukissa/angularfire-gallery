@@ -5,9 +5,9 @@ _ = require 'underscore'
 module.exports = ($rootScope, $q, $firebaseSimpleLogin, FirebaseService) ->
   class User
     constructor: (@$snapshot) ->
-      @[key] = value for key, value of $snapshot.val()
       @$name = @$snapshot.name()
-
+      @[key] = value for key, value of $snapshot.val()
+      @favourites ?= {}
     $save: ->
       deferred = $q.defer()
 

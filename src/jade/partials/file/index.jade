@@ -11,10 +11,19 @@ div(ng-repeat='file in files')
       img(gravatar-src='file.user.email', gravatar-size='36')
       | {{ file.user.username }}
 
-    .btn-toolbar.file-tools(ng-show='user.id == file.user_id')
+    .btn-toolbar.file-tools
       .btn-group
+        button.btn.btn-primary(ng-click='addFavourite(file)', ng-hide='user.favourites[file.$name]')
+          span.glyphicon.glyphicon-heart
+          span Favourite
+
+        button.btn.btn-primary(ng-click='unFavourite(file)', ng-show='user.favourites[file.$name]')
+          span.glyphicon.glyphicon-heart-empty
+          span Unfavourite
+
+      .btn-group(ng-show='user.$name == file.user_id')
         button.btn.btn-danger(ng-click='delete(file)')
           span.glyphicon.glyphicon-remove-circle
-          |  delete
+          span delete
 
     .clearfix

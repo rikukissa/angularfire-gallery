@@ -27,6 +27,14 @@ module.exports = ($scope, $route, $q, $window, $routeParams, $location, userServ
         return $window.history.back() if $window.history > 1
         $location.path '/'
 
+  $scope.addFavourite = (file) ->
+    $scope.user.favourites[file.$name] = true
+    $scope.user.$save()
+
+  $scope.unFavourite = (file) ->
+    $scope.user.favourites = _.omit $scope.user.favourites, file.$name
+    $scope.user.$save()
+
   addFile = (file) ->
     $scope.files.push file
 

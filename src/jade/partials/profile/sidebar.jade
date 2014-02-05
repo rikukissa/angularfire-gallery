@@ -1,14 +1,20 @@
 .sidebar.sidebar-profile
   .profile-box
-    img.avatar(gravatar-src='user.email', gravatar-size='128')
-    h3.username {{ user.username | capitalize }}
-    .label.label-danger(ng-show='user.admin') admin
+    img.avatar(gravatar-src='profile.email', gravatar-size='128')
+    h3.username {{ profile.username | capitalize }}
+    .label.label-danger(ng-show='profile.admin') admin
 
   ul.sidebar-menu
     li
-      a(href='#/profile/files') My files
+      a(href='#/profile/uploads', ng-show='profile.$name == user.$name')
+        | My uploads
+      a(ng-href='#/user/{{ profile.$name }}/uploads', ng-hide='profile.$name == user.$name')
+        | {{ profile.username }}'s uploads
     li
-      a(href='#/profile/favourites') Favourites
+      a(href='#/profile/favourites', ng-show='profile.$name == user.$name')
+        | Favourites
+      a(href='#/user/{{ profile.$name }}/favourites', ng-hide='profile.$name == user.$name')
+        | Favourites
     li
-      a(href='#/profile/settings') Settings
+      a(href='#/profile/settings', ng-show='profile.$name == user.$name') Settings
 

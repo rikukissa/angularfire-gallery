@@ -5,29 +5,37 @@ angular = require 'angular'
 
 module = angular.module 'tt.profile', ['ngRoute']
 
-module.controller 'profileController', ($scope, user) ->
+module.controller 'profileController', ($scope, user, profile) ->
   $scope.user = user
+  $scope.profile = profile
+  $scope.profile ?= user
 
-module.controller 'profileFilesController', ($scope, user, fileService, ngProgress) ->
+module.controller 'profileFilesController', ($scope, user, profile, fileService, ngProgress) ->
   $scope.user = user
+  $scope.profile = profile
+  $scope.profile ?= user
+
   $scope.files = []
 
   ngProgress.start()
 
-  async.map _.keys(user.files), (item, callback) ->
+  async.map _.keys($scope.profile.files), (item, callback) ->
     fileService.getFile(item).then (item) ->
       $scope.files.push item
       callback null
   , ->
     ngProgress.complete()
 
-module.controller 'profileFavouritesController', ($scope, user, fileService, ngProgress) ->
+module.controller 'profileFavouritesController', ($scope, user, profile, fileService, ngProgress) ->
   $scope.user = user
+  $scope.profile = profile
+  $scope.profile ?= user
+
   $scope.files = []
 
   ngProgress.start()
 
-  async.map _.keys(user.favourites), (item, callback) ->
+  async.map _.keys($scope.profile.favourites), (item, callback) ->
     fileService.getFile(item).then (item) ->
       $scope.files.push item
       callback null
@@ -35,8 +43,10 @@ module.controller 'profileFavouritesController', ($scope, user, fileService, ngP
     ngProgress.complete()
 
 
-module.controller 'profileSettingsController', ($scope, $timeout, user) ->
+module.controller 'profileSettingsController', ($scope, $timeout, user, profile) ->
   $scope.user = user
+  $scope.profile = profile
+  $scope.profile ?= user
 
   $scope.userSaved = false
   $scope.userError = null
@@ -55,15 +65,24 @@ module.directive 'sidebar', require '../directives/sidebar.coffee'
 
 resolvers =
   user: (userService) -> userService.getCurrentUser()
+  profile: ($q, userService, $route) ->
+    if $route.current.params.id
+      return userService.getUser parseInt $route.current.params.id
+
+    deferred = $q.defer()
+    deferred.resolve null
+    deferred.promise
+
 
 module.config ($routeProvider, $locationProvider) ->
   $routeProvider
+    # Routes for profile
     .when '/profile/',
       templateUrl: 'profile/index.html'
       controller: 'profileController'
       resolve: resolvers
 
-    .when '/profile/files',
+    .when '/profile/uploads',
       templateUrl: 'profile/files.html'
       controller: 'profileFilesController'
       resolve: resolvers
@@ -78,11 +97,18 @@ module.config ($routeProvider, $locationProvider) ->
       controller: 'profileFavouritesController'
       resolve: resolvers
 
-    # .when '/profile/:userId',
-    #   templateUrl: 'profile/index.html'
-    #   controller: 'profileController'
-    #   resolve: _.extend resolvers,
-    #     externalUser: (userService, $route) ->
-    #       userService.getUser parseInt $route.current.params.userId
+    # Routes for external user
+    .when '/user/:id',
+      templateUrl: 'profile/index.html'
+      controller: 'profileController'
+      resolve: resolvers
 
+    .when '/user/:id/uploads',
+      templateUrl: 'profile/files.html'
+      controller: 'profileFilesController'
+      resolve: resolvers
 
+    .when '/user/:id/favourites',
+      templateUrl: 'profile/favourites.html'
+      controller: 'profileFavouritesController'
+      resolve: resolvers

@@ -7,7 +7,7 @@ div(ng-repeat='file in files')
     div(youtube-embed='{{ file.video }}')
 
   .file-header
-    h2
+    a(ng-href='#/user/{{ file.user.$name }}')
       img(gravatar-src='file.user.email', gravatar-size='36')
       | {{ file.user.username }}
 

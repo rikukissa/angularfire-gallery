@@ -61,8 +61,12 @@ module.service 'FirebaseService', ->
 module.filter 'capitalize', () -> _.str.capitalize
 
 module.run ($rootScope, $location) ->
-  $rootScope.$on '$routeChangeError', ->
-    $location.path '/login'
+  $rootScope.$on '$routeChangeError', (event, current, previous, err) ->
+
+    if err.code in ['USER_NOT_ACCEPTED', 'NOT_LOGGED_IN']
+      return $location.path '/login'
+
+    $location.path '/404'
 
 module.config ($routeProvider, $locationProvider) ->
 

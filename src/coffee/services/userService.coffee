@@ -32,7 +32,9 @@ module.exports = ($rootScope, $q, $firebaseSimpleLogin, FirebaseService) ->
     @users.child(id).once 'value', (snapshot) ->
       user = snapshot.val()
       unless user?
-        return deferred.reject new Error "User #{id} not found"
+        err = new Error "User #{id} not found"
+        err.code = 'USER_NOT_FOUND'
+        return deferred.reject err
       deferred.resolve new User snapshot
 
     deferred.promise

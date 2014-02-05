@@ -7,7 +7,8 @@
     "prepublish": "bower install",
     "start": "gulp",
     "deploy": "gulp build && firebase deploy",
-    "stage": "rsync -avz --delete-after public/ lakka:~/sites/riku.kapsi.fi/www/ttcc/"
+    "stage": "rsync -avz --delete-after public/ lakka:~/sites/riku.kapsi.fi/www/ttcc/",
+    "build": "gulp build"
   },
   "keywords": [
     "gulp",

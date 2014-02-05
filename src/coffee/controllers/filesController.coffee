@@ -20,9 +20,21 @@ module.exports = ($scope, $route, $q, $window, $routeParams, $location, userServ
     next: null
     prev: null
 
+
+
   $scope.delete = (file) ->
     fileService
       .removeFile(file.$name)
+      .then ->
+        # Remove file from current user
+        if parseInt(user.$name) is file.user_id
+          delete user.files[file.$name]
+          return user.$save()
+
+        # Remove file from external user
+        userService.getUser(file.user_id).then (user) ->
+          delete user.files[file.$name]
+          return user.$save()
       .then ->
         return $window.history.back() if $window.history > 1
         $location.path '/'

@@ -1,5 +1,6 @@
 _ = require 'underscore'
 async = require 'async'
+Firebase = require 'firebase'
 
 formatCollection = (snapshot, obj) ->
   for key, value of obj
@@ -8,6 +9,20 @@ formatCollection = (snapshot, obj) ->
 
 module.exports = ($q, FirebaseService) ->
   files: FirebaseService.child('files')
+
+  create: (file) ->
+    deferred = $q.defer()
+
+    file.timestamp = Firebase.ServerValue.TIMESTAMP
+
+    snapshot = @files.push file, (err) ->
+      return deferred.reject err if err?
+
+      snapshot.setPriority file.timestamp, (err) ->
+        return deferred.reject err if err?
+        deferred.resolve snapshot
+
+    deferred.promise
 
   getNewFiles: (limit = 100) ->
     deferred = $q.defer()
@@ -68,9 +83,8 @@ module.exports = ($q, FirebaseService) ->
   removeFile: (id) ->
     deferred = $q.defer()
 
-    removeRef = @files.child(id).remove()
-
-    @files.once 'child_removed', ->
+    @files.child(id).remove (err) ->
+      deferred.reject err if err?
       deferred.resolve()
 
     deferred.promise

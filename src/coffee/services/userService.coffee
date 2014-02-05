@@ -8,6 +8,7 @@ module.exports = ($rootScope, $q, $firebaseSimpleLogin, FirebaseService) ->
       @$name = @$snapshot.name()
       @[key] = value for key, value of $snapshot.val()
       @favourites ?= {}
+      @files ?= {}
 
     $save: ->
       deferred = $q.defer()
@@ -28,7 +29,6 @@ module.exports = ($rootScope, $q, $firebaseSimpleLogin, FirebaseService) ->
 
   getUser: (id) ->
     deferred = $q.defer()
-
     @users.child(id).once 'value', (snapshot) ->
       user = snapshot.val()
       unless user?

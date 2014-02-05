@@ -69,22 +69,8 @@ module.exports = ($scope, $q, $location, $routeParams, userService, imgurService
       @$apply =>
         @preview[target] = e.target.result
 
-
-  $scope.save = (model) ->
-    model.timestamp = Firebase.ServerValue.TIMESTAMP
-    deferred = $q.defer()
-
-    ref = fileService.files.push model, (err) ->
-      return deferred.reject err if err?
-
-      ref.setPriority Firebase.ServerValue.TIMESTAMP, (err) ->
-        return deferred.reject err if err?
-        deferred.resolve ref
-
-    deferred.promise
-
   $scope.saveImage = (file) ->
-    @save
+    fileService.create
       link: file.link
       user_id: $scope.auth.user.id
       file_type: 'image'
@@ -93,9 +79,10 @@ module.exports = ($scope, $q, $location, $routeParams, userService, imgurService
 
   $scope.saveVideo = (video) ->
     id = youtubeService.youtubeId video
+
     throw new Error 'Invalid Youtube id' unless id?
 
-    @save
+    fileService.create
       video: id
       user_id: $scope.auth.user.id
       file_type: 'video'
@@ -135,12 +122,16 @@ module.exports = ($scope, $q, $location, $routeParams, userService, imgurService
       .then (results) =>
         @submitting = false
 
-        $timeout ->
-          $location.path '/files/' + _.map(results, (result) ->
-            result.name()
-          ).join ','
+        savedFiles = _.map results, (result) ->
+          result.name()
 
-        @close()
+        # Get current
+        userService.getCurrentUser().then (user) ->
+          user.files[file] = true for file in savedFiles
+          user.$save()
+        .then =>
+          $location.path '/files/' + savedFiles.join ','
+          @close()
 
       , (error) =>
         @submitting = false
